@@ -19,6 +19,7 @@ namespace SudokuSolver
         private readonly static int SIZE = 81;
 
         private TextBox[] mSudokuTextBoxGrid;
+        private SudokuGame mSudokuGame;
 
         public SudokuUIFrame()
         {
@@ -171,6 +172,9 @@ namespace SudokuSolver
         /// </summary>
         public void buttonCustom_Click(object sender, EventArgs e)
         {
+            labelFinished.Visible = true;
+            buttonFinished.Visible = true;
+
             panel2.BringToFront();
         }
 
@@ -183,7 +187,7 @@ namespace SudokuSolver
         }
 
         /// <summary>
-        /// The action taken when the "Finished" button is pressed from the custom game screen. TODO start a new game if sudoku is valid
+        /// The action taken when the "Finished" button is pressed from the custom game screen.
         /// </summary>
         public void buttonFinished_Click(object sender, EventArgs e)
         {
@@ -201,8 +205,51 @@ namespace SudokuSolver
                 }
             }
 
+            // Display the progress bar while solving the sudoku
             BackgroundSolveWorkerFrame frame = new BackgroundSolveWorkerFrame(sudokuValues);
-            frame.executeSolveWorkerDialog(this);
+            SolveResult result = frame.executeSolveWorkerDialog(this);
+
+            switch (result.getResultType())
+            { 
+                case SolveResult.SUCCESS:
+                    labelFinished.Visible = false;
+                    buttonFinished.Visible = false;
+                    startGame(sudokuValues, result.getSolvedSudoku());
+                    break;
+
+                case SolveResult.INVALID:
+                    MessageBox.Show("The enter values are not a valid Sudoku", "Invalid Sudoku", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    break;
+
+                case SolveResult.ERROR:
+                    MessageBox.Show("There was an error while trying to process the Sudoku: " + result.getErrorMessage(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+
+                case SolveResult.CANCELLED:
+                    break;
+
+                default:
+                    // Should never happen 
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Starts a new game
+        /// </summary>
+        /// <param name="pSudokuGivenValues">The given values for the game</param>
+        /// <param name="pSudokuSolvedValues">The solution to the game</param>
+        private void startGame(byte[] pSudokuGivenValues, byte[] pSudokuSolvedValues)
+        {
+            mSudokuGame = new SudokuGame(pSudokuGivenValues, pSudokuSolvedValues);
+
+            for (int i = 0; i < SIZE; i++)
+            {
+                if (pSudokuGivenValues[i] != 0)
+                {
+                    mSudokuTextBoxGrid[i].ReadOnly = true;
+                }
+            }
         }
     }
 }

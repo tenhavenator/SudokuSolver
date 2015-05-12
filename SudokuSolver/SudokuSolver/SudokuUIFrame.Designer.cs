@@ -218,6 +218,7 @@ namespace SudokuSolver
             this.buttonFinished.TabIndex = 2;
             this.buttonFinished.Text = "Finished";
             this.buttonFinished.UseVisualStyleBackColor = true;
+            this.buttonFinished.Visible = false;
             // 
             // labelFinished
             // 
@@ -227,6 +228,7 @@ namespace SudokuSolver
             this.labelFinished.Size = new System.Drawing.Size(159, 35);
             this.labelFinished.TabIndex = 3;
             this.labelFinished.Text = "Enter your custom sudoku and press \"Finished\"\r\n";
+            this.labelFinished.Visible = false;
             // 
             // tableLayoutPanelMain
             // 

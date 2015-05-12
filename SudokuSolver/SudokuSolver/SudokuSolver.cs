@@ -25,15 +25,14 @@ namespace SudokuSolver
             {
                 if (pBackgroundSudokuSolver.CancellationPending)
                 {
-                    break;
+                    return new SolveResult(SolveResult.CANCELLED);
                 }
 
                 Thread.Sleep(100);
                 pBackgroundSudokuSolver.ReportProgress(i);
                 
             }
-
-            return new SolveResult();
+            return new SolveResult(SolveResult.SUCCESS);
         }
     }
 }
