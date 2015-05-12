@@ -38,8 +38,6 @@ namespace SudokuSolver
             this.panel3 = new System.Windows.Forms.Panel();
             this.buttonFinished = new System.Windows.Forms.Button();
             this.labelFinished = new System.Windows.Forms.Label();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
             this.tableLayoutPanelMain = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel22 = new System.Windows.Forms.TableLayoutPanel();
             this.textBox88 = new System.Windows.Forms.TextBox();
@@ -141,7 +139,8 @@ namespace SudokuSolver
             this.buttonCustom = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.backgroundSudokuSolver = new System.ComponentModel.BackgroundWorker();
+            this.backgroundSolveWorker = new System.ComponentModel.BackgroundWorker();
+            this.backgroundHintWorker = new System.ComponentModel.BackgroundWorker();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.tableLayoutPanelMain.SuspendLayout();
@@ -181,7 +180,7 @@ namespace SudokuSolver
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(687, 23);
             this.label2.TabIndex = 2;
-            this.label2.Text = "Sudoku Solver is a registered trademark of JeffIndunstries. 2015©\r\n";
+            this.label2.Text = "Sudoku Solver. Created by Jeff ten Have. 2015.";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel2
@@ -203,8 +202,6 @@ namespace SudokuSolver
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel3.Controls.Add(this.buttonFinished);
             this.panel3.Controls.Add(this.labelFinished);
-            this.panel3.Controls.Add(this.button5);
-            this.panel3.Controls.Add(this.button3);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel3.Location = new System.Drawing.Point(487, 24);
             this.panel3.Margin = new System.Windows.Forms.Padding(0);
@@ -230,24 +227,6 @@ namespace SudokuSolver
             this.labelFinished.Size = new System.Drawing.Size(159, 35);
             this.labelFinished.TabIndex = 3;
             this.labelFinished.Text = "Enter your custom sudoku and press \"Finished\"\r\n";
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(120, 12);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 24);
-            this.button5.TabIndex = 1;
-            this.button5.Text = "button5";
-            this.button5.UseVisualStyleBackColor = true;
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(3, 12);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 0;
-            this.button3.Text = "button3";
-            this.button3.UseVisualStyleBackColor = true;
             // 
             // tableLayoutPanelMain
             // 
@@ -1933,12 +1912,12 @@ namespace SudokuSolver
             this.button1.Text = "New Game";
             this.button1.UseVisualStyleBackColor = true;
             // 
-            // backgroundSudokuSolver
+            // backgroundSolveWorker
             // 
-            this.backgroundSudokuSolver.WorkerReportsProgress = true;
-            this.backgroundSudokuSolver.WorkerSupportsCancellation = true;
+            this.backgroundSolveWorker.WorkerReportsProgress = true;
+            this.backgroundSolveWorker.WorkerSupportsCancellation = true;
             // 
-            // MainFrame
+            // SudokuUIFrame
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -1950,7 +1929,7 @@ namespace SudokuSolver
             this.Controls.Add(this.panel2);
             this.MainMenuStrip = this.menuStrip1;
             this.MinimumSize = new System.Drawing.Size(703, 620);
-            this.Name = "MainFrame";
+            this.Name = "SudokuUIFrame";
             this.Text = "Sudoku Solver";
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
@@ -1987,10 +1966,8 @@ namespace SudokuSolver
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button buttonFinished;
         private System.Windows.Forms.Label labelFinished;
-        private System.Windows.Forms.Button button3;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelMain;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel22;
         private System.Windows.Forms.TextBox textBox88;
@@ -2092,7 +2069,8 @@ namespace SudokuSolver
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem1;
-        private System.ComponentModel.BackgroundWorker backgroundSudokuSolver;
+        private System.ComponentModel.BackgroundWorker backgroundSolveWorker;
+        private System.ComponentModel.BackgroundWorker backgroundHintWorker;
 
     }
 }

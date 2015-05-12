@@ -44,6 +44,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HintResult.cs" />
+    <Compile Include="BackgroundWorkerFrame.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BackgroundWorkerFrame.Designer.cs">
+      <DependentUpon>BackgroundWorkerFrame.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SolveResult.cs" />
+    <Compile Include="SudokuSolver.cs" />
     <Compile Include="SudokuUIFrame.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -52,6 +61,9 @@
     </Compile>
     <Compile Include="SudokuSolverRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="BackgroundWorkerFrame.resx">
+      <DependentUpon>BackgroundWorkerFrame.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SudokuUIFrame.resx">
       <DependentUpon>SudokuUIFrame.cs</DependentUpon>
     </EmbeddedResource>
