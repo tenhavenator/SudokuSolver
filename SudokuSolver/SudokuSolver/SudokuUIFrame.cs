@@ -232,7 +232,7 @@ namespace SudokuSolver
                 case SolveResult.SUCCESS:
                     labelFinished.Visible = false;
                     buttonFinished.Visible = false;
-                    startGame(sudokuValues, result.SolveResult);
+                    startGame(sudokuValues, result.SolveResultValues);
                     break;
 
                 case SolveResult.INVALID:

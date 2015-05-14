@@ -33,7 +33,7 @@ namespace SudokuSolver
         public static SolveResult createSuccessResult(byte[] pSolvedSudoku)
         {
             SolveResult result = new SolveResult(SUCCESS);
-            result.SolveResult = pSolvedSudoku;
+            result.SolveResultValues = pSolvedSudoku;
 
             return result;
         }
@@ -77,10 +77,10 @@ namespace SudokuSolver
         /// <summary>
         /// Property to access the result of solved sudoku
         /// </summary>
-        public byte[] SolveResult
+        public byte[] SolveResultValues
         {
-            public get { return mSolvedSudoku; }
-            private set { mSolvedSudoku = value; }
+            get { return mSolvedSudoku; }
+            set { mSolvedSudoku = value; }
         }
 
         /// <summary>
@@ -88,8 +88,8 @@ namespace SudokuSolver
         /// </summary>
         public string ErrorMessage
         {
-            public get { return mErrorMessage; }
-            private set { mErrorMessage = value; }
+            get { return mErrorMessage; }
+            set { mErrorMessage = value; }
         }
     }
 }
