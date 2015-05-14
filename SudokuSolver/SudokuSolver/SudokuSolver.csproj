@@ -50,6 +50,7 @@
     <Compile Include="BackgroundWorkerFrame.Designer.cs">
       <DependentUpon>BackgroundWorkerFrame.cs</DependentUpon>
     </Compile>
+    <Compile Include="Constants.cs" />
     <Compile Include="SolveResult.cs" />
     <Compile Include="SudokuGame.cs" />
     <Compile Include="SudokuSolver.cs" />

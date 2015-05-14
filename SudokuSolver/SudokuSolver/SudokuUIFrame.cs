@@ -29,6 +29,8 @@ namespace SudokuSolver
             this.buttonCustom.Click += new EventHandler(this.buttonCustom_Click);
             this.buttonFinished.Click += new EventHandler(this.buttonFinished_Click);
             this.buttonExit.Click += new EventHandler(this.buttonExit_Click);
+            this.buttonSolve.Click += new EventHandler(this.buttonSolve_Click);
+
         }
 
         #region TextBoxRegion definition
@@ -187,6 +189,22 @@ namespace SudokuSolver
         }
 
         /// <summary>
+        /// The action taken when the solve is press on the game screen.
+        /// </summary>
+        public void buttonSolve_Click(object sender, EventArgs e)
+        {
+            DialogResult result =  MessageBox.Show("Are you sure you want to solve the sudoku?", "Solve Sudoku", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+            if (result == DialogResult.OK)
+            {
+                for (int i = 0; i < 81; i++)
+                {
+                    mSudokuTextBoxGrid[i].Text = Convert.ToString(mSudokuGame.SolvedValues[i]);
+                }
+            }
+        
+        }
+
+        /// <summary>
         /// The action taken when the "Finished" button is pressed from the custom game screen.
         /// </summary>
         public void buttonFinished_Click(object sender, EventArgs e)
@@ -209,12 +227,12 @@ namespace SudokuSolver
             BackgroundSolveWorkerFrame frame = new BackgroundSolveWorkerFrame(sudokuValues);
             SolveResult result = frame.executeSolveWorkerDialog(this);
 
-            switch (result.getResultType())
+            switch (result.ResultType)
             { 
                 case SolveResult.SUCCESS:
                     labelFinished.Visible = false;
                     buttonFinished.Visible = false;
-                    startGame(sudokuValues, result.getSolvedSudoku());
+                    startGame(sudokuValues, result.SolveResult);
                     break;
 
                 case SolveResult.INVALID:
@@ -222,7 +240,7 @@ namespace SudokuSolver
                     break;
 
                 case SolveResult.ERROR:
-                    MessageBox.Show("There was an error while trying to process the Sudoku: " + result.getErrorMessage(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("There was an error while trying to process the Sudoku: " + result.ErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
 
                 case SolveResult.CANCELLED:
@@ -250,6 +268,8 @@ namespace SudokuSolver
                     mSudokuTextBoxGrid[i].ReadOnly = true;
                 }
             }
+
+            buttonSolve.Visible = true;
         }
     }
 }

@@ -36,6 +36,7 @@ namespace SudokuSolver
             this.label2 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.buttonSolve = new System.Windows.Forms.Button();
             this.buttonFinished = new System.Windows.Forms.Button();
             this.labelFinished = new System.Windows.Forms.Label();
             this.tableLayoutPanelMain = new System.Windows.Forms.TableLayoutPanel();
@@ -200,6 +201,7 @@ namespace SudokuSolver
             // panel3
             // 
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel3.Controls.Add(this.buttonSolve);
             this.panel3.Controls.Add(this.buttonFinished);
             this.panel3.Controls.Add(this.labelFinished);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
@@ -208,6 +210,16 @@ namespace SudokuSolver
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(200, 475);
             this.panel3.TabIndex = 5;
+            // 
+            // buttonSolve
+            // 
+            this.buttonSolve.Location = new System.Drawing.Point(3, 3);
+            this.buttonSolve.Name = "buttonSolve";
+            this.buttonSolve.Size = new System.Drawing.Size(75, 23);
+            this.buttonSolve.TabIndex = 4;
+            this.buttonSolve.Text = "Solve";
+            this.buttonSolve.UseVisualStyleBackColor = true;
+            this.buttonSolve.Visible = false;
             // 
             // buttonFinished
             // 
@@ -2073,6 +2085,7 @@ namespace SudokuSolver
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem1;
         private System.ComponentModel.BackgroundWorker backgroundSolveWorker;
         private System.ComponentModel.BackgroundWorker backgroundHintWorker;
+        private System.Windows.Forms.Button buttonSolve;
 
     }
 }

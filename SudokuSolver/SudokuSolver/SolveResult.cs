@@ -2,7 +2,6 @@
 /// This class represents the result when solving a sudoku.
 /// </summary>
 
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,51 +21,75 @@ namespace SudokuSolver
         private byte[] mSolvedSudoku;
         private string mErrorMessage;
 
-        public SolveResult(int pResultType)
+        private SolveResult(int pResultType)
         {
             mResultType = pResultType;
         }
 
         /// <summary>
-        /// Returns the result when trying to solve the sudoku
+        /// Creates a solve result for a successfully solved sudoku
         /// </summary>
-        public int getResultType()
+        /// <param name="pSolvedSudoku">The values for the successfully solved sudoku</param>
+        public static SolveResult createSuccessResult(byte[] pSolvedSudoku)
         {
-            return mResultType;
+            SolveResult result = new SolveResult(SUCCESS);
+            result.SolveResult = pSolvedSudoku;
+
+            return result;
         }
 
         /// <summary>
-        /// Returns the solved sudoku if it was successfully solved
-        /// </summary>
-        public byte[] getSolvedSudoku()
-        {
-            return mSolvedSudoku;
-        }
-
-        /// <summary>
-        /// Sets the solved sudoku values
-        /// </summary>
-        /// <param name="pSolvedSudoku">The solved sudoku</param>
-        public void setSolvedSudoku(byte[] pSolvedSudoku)
-        {
-            mSolvedSudoku = pSolvedSudoku;
-        }
-
-        /// <summary>
-        /// Returns the error message if there was an error when solving the sudoku
-        /// </summary>
-        public string getErrorMessage() 
-        {
-            return mErrorMessage;
-        }
-
-        /// <summary>
-        /// Sets the error message if there was an error when trying to solve the sudoku
+        /// Creates a solve result incase an error has occurred
         /// </summary>
         /// <param name="pErrorMessage">The error message</param>
-        public void setErrorMessage(string pErrorMessage)
+        public static SolveResult createErrorResult(string pErrorMessage)
         {
-            mErrorMessage = pErrorMessage;
+            SolveResult result = new SolveResult(ERROR);
+            result.ErrorMessage = pErrorMessage;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a solve result for when an invalid sudoku is entered
+        /// </summary>
+        public static SolveResult createInvalidResult()
+        {
+            return new SolveResult(INVALID);
+        }
+
+        /// <summary>
+        /// Creates a new solve result for when the solve operation is cancelled. 
+        /// </summary>
+        public static SolveResult createCancelledResult()
+        {
+            return new SolveResult(CANCELLED);
+        }
+
+        /// <summary>
+        /// Property to access the result type
+        /// </summary>
+        public int ResultType
+        {
+            get { return mResultType; }
+        }
+
+        /// <summary>
+        /// Property to access the result of solved sudoku
+        /// </summary>
+        public byte[] SolveResult
+        {
+            public get { return mSolvedSudoku; }
+            private set { mSolvedSudoku = value; }
+        }
+
+        /// <summary>
+        /// Property to access the error message 
+        /// </summary>
+        public string ErrorMessage
+        {
+            public get { return mErrorMessage; }
+            private set { mErrorMessage = value; }
         }
     }
 }

@@ -39,7 +39,7 @@ namespace SudokuSolver
         }
 
         /// <summary>
-        /// Saves the current game by writing it to a save file. Returns true if the game is saved successfully. 
+        /// Saves the current game by writing it to a save file. Returns true if the game is saved successfully. TODO Make this actually write to a file.
         /// </summary>
         /// <returns></returns>
         public Boolean save() 
@@ -57,6 +57,11 @@ namespace SudokuSolver
         {
             mSudokuEnteredValues[pIndex] = pValue;
             mSaved = false;
+        }
+
+        public byte[] SolvedValues
+        {
+            get { return mSudokuSolvedValues; }
         }
     }
 }
