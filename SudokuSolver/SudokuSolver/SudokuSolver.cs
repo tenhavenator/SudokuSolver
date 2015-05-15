@@ -101,6 +101,42 @@ namespace SudokuSolver
         }
 
         /// <summary>
+        /// Check if the a value has been found on the board and insert it
+        /// </summary>
+        /// <returns></returns>
+        public Boolean checkForKnownValue()
+        {
+            // Check if a value has been found
+            foreach (Entity entity in mEntities)
+            {
+                // For each possible value in the entity, check if there is only one square where it can be
+                foreach (byte value in entity.UnknownValues)
+                {
+                    List<Square> candidateSquares = new List<Square>();
+
+                    foreach (Square square in entity.Squares)
+                    {
+                        if (square.PossibleValues.Contains(value))
+                        {
+                            candidateSquares.Add(square);
+                        }
+                    }
+
+                    // Add value to the board if it has been found. 
+                    if (candidateSquares.Count == 1)
+                    {
+                        setKnownValue(candidateSquares[0].Row, candidateSquares[0].Column, value);
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+
+
+        /// <summary>
         /// Checks if all squares have been assigned a value.
         /// </summary>
         /// <returns>Returns true if all square have a been assigned a value </returns>
@@ -355,8 +391,6 @@ namespace SudokuSolver
                 // Main solving technique loop
                 while (true)
                 {
-                    Boolean foundValue = false;
-
                     // Check if operation was cancelled
                     if (pBackgroundSudokuSolver.CancellationPending)
                     {
@@ -379,10 +413,51 @@ namespace SudokuSolver
                         return SolveResult.createSuccessResult(solvedValues);
                     }
 
-                    // Check if a value has been found
+                    // Check if a value has been found on the board
+                    if (board.checkForKnownValue())
+                    {
+                        // Update progress
+                        pBackgroundSudokuSolver.ReportProgress(++progress);
+                        continue;
+                    }
+
+                    // ###############################################################################################################
+                    // Only Possibility Technique
+                    //  - There is only one value that can possibly go in a square
+                    // ###############################################################################################################
                     foreach (Entity entity in board.Entities)
                     {
-                        // For each possible value in the entity, check if there is only one square where it can be
+                        foreach (Square square in entity.Squares)
+                        {
+                            if (square.PossibleValues.Count == 1)
+                            {
+                                foreach (Square eliminateSquare in entity.Squares)
+                                {
+                                    if (eliminateSquare != square)
+                                    {
+                                        eliminateSquare.eliminatePossibleValue(square.PossibleValues[0]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (board.checkForKnownValue())
+                    {
+                        // Update progress
+                        pBackgroundSudokuSolver.ReportProgress(++progress);
+                        continue;
+                    }
+
+                    // ###############################################################################################################
+                    // Possible Pair Shadow Technique
+                    //  - If there are only two possible squares where a value can go within an entity and those square are 
+                    //    also part of a second entity, that value can go nowhere else but those two squares in the second entity 
+                    //  - TODO: Make this a possible pair and triple shadow
+                    // ###############################################################################################################
+                    foreach (Entity entity in board.Entities)
+                    {
+                        // For each possible value in the entity, check if there is only two squares where it can be
                         foreach (byte value in entity.UnknownValues)
                         {
                             List<Square> candidateSquares = new List<Square>();
@@ -395,37 +470,92 @@ namespace SudokuSolver
                                 }
                             }
 
-                            // Add value to the board if it has been found. 
-                            if (candidateSquares.Count == 1)
+                            // If the candidate square are entirely within another entity then eliminate the possible value
+                            // from all other squares in that entity
+                            if (candidateSquares.Count == 2)
                             {
-                                board.setKnownValue(candidateSquares[0].Row, candidateSquares[0].Column, value);
-                                foundValue = true;
-                                break;
+                                // Check if any other entity also contains these two squares
+                                foreach (Entity overlapEntity in board.Entities)
+                                {
+                                    if (!candidateSquares.Except(overlapEntity.Squares).Any())
+                                    {
+                                        foreach (Square square in overlapEntity.Squares.Except(candidateSquares))
+                                        {
+                                            square.eliminatePossibleValue(value);                                       
+                                        }
+                                    }
+                                }
                             }
-
                         }
-
-                        if (foundValue)
-                        {
-                            break;
-                        }
-
                     }
 
-                    if (foundValue)
+                    // Check if a value has been found on the board
+                    if (board.checkForKnownValue())
                     {
                         // Update progress
                         pBackgroundSudokuSolver.ReportProgress(++progress);
                         continue;
                     }
 
-                    // If notthing is found then the sudoku is invalid or too hard
+                    // ###############################################################################################################
+                    // Possible Value Closure Technique
+                    //  - If two values within an entity have the same two possible square where they can go, then nothing else can go
+                    //     there. TODO - Make this work with three values as well
+                    // ###############################################################################################################
+                    foreach (Entity entity in board.Entities)
+                    {
+                        Dictionary<byte, List<Square>> possibleSquareSets = new Dictionary<byte, List<Square>>();
+
+                        foreach (byte value in entity.UnknownValues)
+                        {
+                            List<Square> candidateSquares = new List<Square>();
+
+                            foreach (Square square in entity.Squares)
+                            {
+                                if (square.PossibleValues.Contains(value))
+                                {
+                                    candidateSquares.Add(square);
+                                }
+                            }
+
+                            possibleSquareSets.Add(value, candidateSquares);
+
+                            if (candidateSquares.Count == 2)
+                            { 
+                                foreach (byte otherValue in entity.UnknownValues.Except(new List<byte>() {value}))
+                                {
+                                    List<Square> otherCandidateSquares;
+                                    if (possibleSquareSets.TryGetValue(otherValue, out otherCandidateSquares))
+                                    {
+                                        if (candidateSquares.SequenceEqual(otherCandidateSquares))
+                                        {
+                                            foreach (Square square in candidateSquares)
+                                            {
+                                                foreach (byte eliminateValue in entity.UnknownValues.Except(new List<byte>() { value, otherValue }))
+                                                {
+                                                    square.eliminatePossibleValue(eliminateValue);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            // TODO make this work for three values
+                        }
+                    }
+
+                    // Check if a value has been found on the board
+                    if (board.checkForKnownValue())
+                    {
+                        // Update progress
+                        pBackgroundSudokuSolver.ReportProgress(++progress);
+                        continue;
+                    }
                     else
                     {
                         return SolveResult.createInvalidResult();
-                    }
-
-                    // Apply more techniques and check again        
+                    }      
                 }
 
             }
