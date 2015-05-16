@@ -499,13 +499,19 @@ namespace SudokuSolver
 
                     // ###############################################################################################################
                     // Possible Value Closure Technique
-                    //  - If two values within an entity have the same two possible square where they can go, then nothing else can go
-                    //     there. TODO - Make this work with three values as well
+                    //  - If n values within an entity have the same n possible square where they can go, then nothing else can go
+                    //    there. 
                     // ###############################################################################################################
                     foreach (Entity entity in board.Entities)
                     {
-                        Dictionary<byte, List<Square>> possibleSquareSets = new Dictionary<byte, List<Square>>();
+                        // If the entity has only 2 unknown values then we already know nothing else can go in its 2 free squares
+                        if (entity.UnknownValues.Count < 3)
+                        {
+                            continue;
+                        }
 
+                        // Create dictionary of possible squares for each unknown value in the entity
+                        Dictionary<byte, List<Square>> possibleSquareSets = new Dictionary<byte, List<Square>>();
                         foreach (byte value in entity.UnknownValues)
                         {
                             List<Square> candidateSquares = new List<Square>();
@@ -517,31 +523,56 @@ namespace SudokuSolver
                                     candidateSquares.Add(square);
                                 }
                             }
-
                             possibleSquareSets.Add(value, candidateSquares);
+                        }
+                        
+                        // Create list of possible unknown value combinations. Size of combinations is n, where n is 2 - ((unkown values count) - 1)
+                        List<List<byte>>[] combos = new List<List<byte>>[entity.UnknownValues.Count - 2];
+                        for (int i = 0; i < entity.UnknownValues.Count - 2; i++)
+                        {
+                            combos[i] = new List<List<byte>>();
+                        }
 
-                            if (candidateSquares.Count == 2)
-                            { 
-                                foreach (byte otherValue in entity.UnknownValues.Except(new List<byte>() {value}))
+                        for (int n = 1; n < ((1 << entity.UnknownValues.Count) - 1); n++)
+                        {
+                            List<byte> combo = new List<byte>();
+                            for (int i = 0; i < entity.UnknownValues.Count; i++)
+                            {
+                                if (((1 << i) & n) == 0)
                                 {
-                                    List<Square> otherCandidateSquares;
-                                    if (possibleSquareSets.TryGetValue(otherValue, out otherCandidateSquares))
+                                    combo.Add(entity.UnknownValues[i]);
+                                }
+                            }
+                          
+                            if(combo.Count > 1)
+                            {
+                                combos[combo.Count - 2].Add(combo);
+                            }
+                        }
+
+                        // Use the generated possible value combinations to see if a combination of size n has only n possible squares
+                        for (int n = 0; n < combos.Length; n++)
+                        {
+                            foreach (List<byte> combosSizeN in combos[n])
+                            {
+                                IEnumerable<Square> union = new List<Square>();
+                                foreach (byte value in combosSizeN)
+                                {
+                                    union = union.Union(possibleSquareSets[value]);
+                                }
+                                
+                                List<Square> unionList = union.ToList();
+                                if (unionList.Count == n + 2)
+                                {
+                                    foreach (Square square in unionList)
                                     {
-                                        if (candidateSquares.SequenceEqual(otherCandidateSquares))
+                                        foreach (byte value in entity.UnknownValues.Except(combosSizeN))
                                         {
-                                            foreach (Square square in candidateSquares)
-                                            {
-                                                foreach (byte eliminateValue in entity.UnknownValues.Except(new List<byte>() { value, otherValue }))
-                                                {
-                                                    square.eliminatePossibleValue(eliminateValue);
-                                                }
-                                            }
+                                            square.eliminatePossibleValue(value);
                                         }
                                     }
                                 }
                             }
-
-                            // TODO make this work for three values
                         }
                     }
 
@@ -561,9 +592,9 @@ namespace SudokuSolver
             }
             catch (Exception e)
             {
+                Console.Write(e.StackTrace);
                 return SolveResult.createErrorResult(e.Message);
             }
         }
     }
-
 }
