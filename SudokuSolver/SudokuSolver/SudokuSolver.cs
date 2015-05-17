@@ -583,11 +583,54 @@ namespace SudokuSolver
                         pBackgroundSudokuSolver.ReportProgress(++progress);
                         continue;
                     }
+
+                    // #############################################################################################################
+                    // TODO - Think of a name for this technique
+                    // #############################################################################################################
+
+                    List<Dictionary<byte, List<Square>>> entityPossibleSquareDictionaries = new List<Dictionary<byte, List<Square>>>();
+                    foreach (Entity entity in board.Entities)
+                    {
+                        Dictionary<byte, List<Square>> possibleSquareSets = new Dictionary<byte, List<Square>>();
+                        foreach (byte value in entity.UnknownValues)
+                        {
+                            List<Square> candidateSquares = new List<Square>();
+
+                            foreach (Square square in entity.Squares)
+                            {
+                                if (square.PossibleValues.Contains(value))
+                                {
+                                    candidateSquares.Add(square);
+                                }
+                            }
+                            possibleSquareSets.Add(value, candidateSquares);
+                        }
+
+                        entityPossibleSquareDictionaries.Add(possibleSquareSets);
+                    }
+
+                    foreach (Dictionary<byte, List<Square>> possibleSquareSets in entityPossibleSquareDictionaries)
+                    {
+                    
+                    
+                    }
+
+
+
+                    // Check if a value has been found on the board
+                    if (board.checkForKnownValue())
+                    {
+                        // Update progress
+                        pBackgroundSudokuSolver.ReportProgress(++progress);
+                        continue;
+                    }
                     else
                     {
                         return SolveResult.createInvalidResult();
                     }      
                 }
+
+              
 
             }
             catch (Exception e)
