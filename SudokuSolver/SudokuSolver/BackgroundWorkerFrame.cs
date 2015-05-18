@@ -57,7 +57,19 @@ namespace SudokuSolver
         /// </summary>
         private void backgroundWorkerProgress(object sender, ProgressChangedEventArgs e)
         {
-            progressBar.Value = e.ProgressPercentage;
+            int progress = e.ProgressPercentage;
+
+            if (progress > 100)
+            {
+                progress = 100;
+            }
+
+            if (progress < 0)
+            {
+                progress = 0;
+            }
+
+            progressBar.Value = progress;
         }
 
         /// <summary>
