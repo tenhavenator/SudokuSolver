@@ -17,20 +17,11 @@ namespace SudokuSolver
     /// </summary>
     public class Board
     { 
-        private Box[,] mBoxes;
-        private Row[] mRows;
-        private Column[] mColumns;
         private Square[,] mGrid;
         private List<Entity> mEntities;
 
-        private int mSquaresFilled;
-
         public Board()
         {
-            mSquaresFilled = 0;
-            mBoxes = new Box[Constants.BOX_SIZE, Constants.BOX_SIZE];
-            mRows = new Row[Constants.BOARD_SIZE];
-            mColumns = new Column[Constants.BOARD_SIZE];
             mEntities = new List<Entity>();
 
             // Initialize the grid of squares
@@ -53,28 +44,18 @@ namespace SudokuSolver
                 int boxStartColumn = boxColumn * Constants.BOX_SIZE;
 
                 // Create a new box that contains the correct squares
-                Box box = new Box(new Square[] { 
+                mEntities.Add(new Entity(new List<Square>() { 
                     mGrid[boxStartRow, boxStartColumn], mGrid[boxStartRow, boxStartColumn + 1], mGrid[boxStartRow, boxStartColumn + 2],
                     mGrid[boxStartRow + 1, boxStartColumn], mGrid[boxStartRow + 1, boxStartColumn + 1], mGrid[boxStartRow + 1, boxStartColumn + 2],
-                    mGrid[boxStartRow + 2, boxStartColumn], mGrid[boxStartRow + 2, boxStartColumn + 1], mGrid[boxStartRow + 2, boxStartColumn + 2]});
-
-                mBoxes[boxRow, boxColumn] = box;
-                mEntities.Add(box);
+                    mGrid[boxStartRow + 2, boxStartColumn], mGrid[boxStartRow + 2, boxStartColumn + 1], mGrid[boxStartRow + 2, boxStartColumn + 2]}));
 
                 // Create a column that contains the correct squares
-                Column column = new Column(new Square[] { 
-                    mGrid[0,i], mGrid[1,i], mGrid[2,i], mGrid[3,i], mGrid[4,i], mGrid[5,i], mGrid[6,i], mGrid[7,i], mGrid[8,i]});
-
-                mColumns[i] = column;
-                mEntities.Add(column);
+                 mEntities.Add(new Entity(new List<Square>() { 
+                    mGrid[0,i], mGrid[1,i], mGrid[2,i], mGrid[3,i], mGrid[4,i], mGrid[5,i], mGrid[6,i], mGrid[7,i], mGrid[8,i]}));
 
                 // Create a row that contains the correct squares
-                Row row = new Row(new Square[] { 
-                    mGrid[i,0], mGrid[i,1], mGrid[i,2], mGrid[i,3], mGrid[i,4], mGrid[i,5], mGrid[i,6], mGrid[i,7], mGrid[i,8]});
-
-                mRows[i] = row;
-                mEntities.Add(row);
-            
+                 mEntities.Add(new Entity(new List<Square>() { 
+                    mGrid[i,0], mGrid[i,1], mGrid[i,2], mGrid[i,3], mGrid[i,4], mGrid[i,5], mGrid[i,6], mGrid[i,7], mGrid[i,8]}));
             }
         }
 
@@ -85,25 +66,15 @@ namespace SudokuSolver
         /// <param name="pColumn">The column value of the square</param>
         /// <param name="pValue">The value to be put in the square</param>
         /// <returns></returns>
-        public Boolean setKnownValue(int pRow, int pColumn, byte pValue)
+        public void setKnownValue(int pRow, int pColumn, byte pValue)
         {
-            mSquaresFilled++;
-
-            // Place the in the square
-            mGrid[pRow, pColumn].Value = pValue;
-
-            // Check that the three entities where the value is going do not have that value yet
-            Boolean rowResult = mRows[pRow].setKnownValue(pValue);
-            Boolean columnResult = mColumns[pColumn].setKnownValue(pValue);
-            Boolean boxResult = mBoxes[pRow / Constants.BOX_SIZE, pColumn / Constants.BOX_SIZE].setKnownValue(pValue);
-
-            return rowResult && columnResult && boxResult;
+            mGrid[pRow, pColumn].setKnownValue(pValue);
         }
 
         /// <summary>
-        /// Check if the a value has been found on the board and insert it
+        /// Check if a value has been found on the board and insert it
         /// </summary>
-        /// <returns></returns>
+        /// <returns>True if a value was found and false if not</returns>
         public Boolean checkForKnownValue()
         {
             // Check if a value has been found
@@ -112,15 +83,7 @@ namespace SudokuSolver
                 // For each possible value in the entity, check if there is only one square where it can be
                 foreach (byte value in entity.UnknownValues)
                 {
-                    List<Square> candidateSquares = new List<Square>();
-
-                    foreach (Square square in entity.Squares)
-                    {
-                        if (square.PossibleValues.Contains(value))
-                        {
-                            candidateSquares.Add(square);
-                        }
-                    }
+                    List<Square> candidateSquares = entity.candidateSquaresForValue(value);
 
                     // Add value to the board if it has been found. 
                     if (candidateSquares.Count == 1)
@@ -134,19 +97,12 @@ namespace SudokuSolver
             return false;
         }
 
-
-
         /// <summary>
         /// Checks if all squares have been assigned a value.
         /// </summary>
         /// <returns>Returns true if all square have a been assigned a value </returns>
         public Boolean isSolved()
         {
-            if (mSquaresFilled < Constants.BOARD_SIZE * Constants.BOARD_SIZE)
-            {
-                return false;
-            }
-
             // Check if the sudoku is solved
             for (int row = 0; row < Constants.BOARD_SIZE; row++)
             {
@@ -171,30 +127,6 @@ namespace SudokuSolver
         }
 
         /// <summary>
-        /// Property for accessing the list of columns
-        /// </summary>
-        public Column[] Columns
-        {
-            get { return mColumns; }
-        }
-
-        /// <summary>
-        /// Property for accessing the list of rows
-        /// </summary>
-        public Row[] Rows
-        {
-            get { return mRows; }
-        }
-
-        /// <summary>
-        /// Property for accessing the list of boxes
-        /// </summary>
-        public Box[,] Boxes
-        {
-            get { return mBoxes; }
-        }
-
-        /// <summary>
         /// Property for the list accessing all entities (rows, columns, boxes)
         /// </summary>
         public List<Entity> Entities
@@ -210,24 +142,47 @@ namespace SudokuSolver
     {
         private int mRow;
         private int mColumn;
-        private List<byte> mPossibleValues;
         private byte mFinalValue;
+        private List<Action<byte, Square>> mEntityNotifiers;
 
         public Square(int pRow, int pColumn)
         {
             mRow = pRow;
             mColumn = pColumn;
             mFinalValue = 0;
-            mPossibleValues = new List<byte>() {1,2,3,4,5,6,7,8,9};
+            mEntityNotifiers = new List<Action<byte, Square>>();
         }
 
         /// <summary>
-        /// Removes a value from the list of values that can possible occupy this square
+        /// Removes a value from the list of values that can possibly occupy this square. Notifies all listening entities that the
+        /// value cannot go in this square anymore
         /// </summary>
         /// <param name="pValue">The value to be removed</param>
         public void eliminatePossibleValue(byte pValue)
         {
-            mPossibleValues.Remove(pValue);
+            if (!isFilled())
+            {
+                mEntityNotifiers.ForEach(notifier => notifier(pValue, this));
+            }
+        }
+
+        /// <summary>
+        /// Sets a value to be in this square. Notifies all listening entities that there is now a value in this square
+        /// </summary>
+        /// <param name="pValue">The value to be placed in this square</param>
+        public void setKnownValue(byte pValue)
+        {
+            mFinalValue = pValue;
+            mEntityNotifiers.ForEach(notifier => notifier(pValue, this));
+        }
+
+        /// <summary>
+        /// Adds a notifier to this square that will be activated when the square publishes a notification
+        /// </summary>
+        /// <param name="pNotifier">The notifier to activate</param>
+        public void addEntityNotifier(Action<byte, Square> pNotifier)
+        {
+            mEntityNotifiers.Add(pNotifier);
         }
 
         /// <summary>
@@ -245,19 +200,6 @@ namespace SudokuSolver
         public byte Value
         {
             get { return mFinalValue;}
-            set
-            {
-                mPossibleValues = new List<byte>();
-                mFinalValue = value;
-            }
-        }
-
-        /// <summary>
-        /// Property to access the list of possible values for this square
-        /// </summary>
-        public List<byte> PossibleValues
-        {
-            get { return mPossibleValues; }
         }
 
         /// <summary>
@@ -282,28 +224,60 @@ namespace SudokuSolver
     /// </summary>
     public class Entity
     { 
-        private Square[] mSquares;
+        private List<Square> mSquares;
         private List<byte> mMissingValues;
+        private Dictionary<byte, List<Square>> mCandidateSquares;
 
-        public Entity(Square[] pSquares)
+        public Entity(List<Square> pSquares)
         {
             mSquares = pSquares;
             mMissingValues = new List<byte>() {1,2,3,4,5,6,7,8,9};
+            mCandidateSquares = new Dictionary<byte, List<Square>>();
+
+            mSquares.ForEach(square => square.addEntityNotifier(this.squareNotificationHandler));
+            mMissingValues.ForEach(value => mCandidateSquares.Add(value, new List<Square>(mSquares)));
         }
 
         /// <summary>
-        /// Adds a value from 1-9 in the entity.
+        /// Tiggered when a square publishes a notification indicating that it has been filled or that a 
+        /// possible value has been eliminated
         /// </summary>
-        /// <param name="pValue">The value to add</param>
-        /// <returns>Returns true if the new value is valid and false if that value is already in this entity</returns>
-        public Boolean setKnownValue(byte pValue)
+        /// <param name="pValue">The value final value entered or the possible value removed from a square</param>
+        private void squareNotificationHandler(byte pValue, Square pSquare)
         {
-            foreach (Square square in mSquares)
+            // The square has been filled
+            if (pSquare.isFilled())
             {
-                square.eliminatePossibleValue(pValue);
+                mCandidateSquares.Remove(pValue);
+                mMissingValues.Remove(pValue);
+                mMissingValues.ForEach(value => mCandidateSquares[value].Remove(pSquare));
+                mSquares.ForEach(square => square.eliminatePossibleValue(pValue));
+ 
+            }
+            // A possible value has been eliminated from the square
+            else 
+            {
+                if (mCandidateSquares.ContainsKey(pValue))
+                {
+                    mCandidateSquares[pValue].Remove(pSquare);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the set of candidate squares for a certain value
+        /// </summary>
+        /// <param name="pValue">The value to retreive candidate squares for</param>
+        /// <returns>The list of candidate squares</returns>
+        public List<Square> candidateSquaresForValue(byte pValue)
+        {
+            List<Square> candidateSqaures;
+            if (mCandidateSquares.TryGetValue(pValue, out candidateSqaures))
+            {
+                return candidateSqaures;
             }
 
-            return mMissingValues.Remove(pValue);
+            return new List<Square>();
         }
 
         /// <summary>
@@ -317,40 +291,9 @@ namespace SudokuSolver
         /// <summary>
         /// Property to access that list of 9 squares in the entity
         /// </summary>
-        public Square[] Squares
+        public List<Square> Squares
         {
             get { return mSquares; }
-        }
-    }
-
-    /// <summary>
-    /// Class to represent a box entity
-    /// </summary>
-    public class Box : Entity
-    {
-        public Box(Square[] pSquares) : base(pSquares)
-        { 
-        }
-    }
-
-    /// <summary>
-    /// Class to represent a row entity
-    /// </summary>
-    public class Row : Entity
-    { 
-        public Row(Square[] pSquares) : base(pSquares)
-        { 
-        }
-    }
-
-    /// <summary>
-    /// Class to represent a column entity
-    /// </summary>
-    public class Column : Entity
-    { 
-        public Column(Square[] pSquares) : base(pSquares)
-        { 
-            
         }
     }
 
@@ -359,6 +302,9 @@ namespace SudokuSolver
     /// </summary>
     public class SudokuSolver
     {
+        private const int SLEEP_TIME_MS = 62;
+        private const double VALUE_PERCENT  = 1.23;
+
         /// <summary>
         /// Solves a given sudoku. 
         /// </summary>
@@ -367,30 +313,39 @@ namespace SudokuSolver
             try
             { 
                 Board board = new Board();
-                int progress = 0;
+                double progress = 0.0;
 
                 // Set initial values
                 for (int i = 0; i < pSudokuValues.Length; i++)
                 {
+                    // Check if operation was cancelled
+                    if (pBackgroundSudokuSolver.CancellationPending)
+                    {
+                        return SolveResult.createCancelledResult();
+                    }
+
                     if (pSudokuValues[i] != 0)
                     {
                         // Update progress
-                        pBackgroundSudokuSolver.ReportProgress(++progress);
-
+                        progress += VALUE_PERCENT;
+                        pBackgroundSudokuSolver.ReportProgress(Convert.ToInt32(progress));
+                        Thread.Sleep(SLEEP_TIME_MS);
 
                         int row = i / Constants.BOARD_SIZE;
                         int column = i % Constants.BOARD_SIZE;
 
-                        if (!board.setKnownValue(row, column, pSudokuValues[i]))
-                        {
-                            return SolveResult.createInvalidResult();
-                        }
+                        board.setKnownValue(row, column, pSudokuValues[i]);
                     }
                 }
 
                 // Main solving technique loop
                 while (true)
                 {
+                    // Update progress
+                    progress += VALUE_PERCENT;
+                    pBackgroundSudokuSolver.ReportProgress(Convert.ToInt32(progress));
+                    Thread.Sleep(SLEEP_TIME_MS);
+
                     // Check if operation was cancelled
                     if (pBackgroundSudokuSolver.CancellationPending)
                     {
@@ -400,7 +355,6 @@ namespace SudokuSolver
                     // Check if the sudoku is solved
                     if (board.isSolved())
                     {
-
                         byte[] solvedValues = new byte[81];
                         for (int i = 0; i < pSudokuValues.Length; i++)
                         {
@@ -416,8 +370,6 @@ namespace SudokuSolver
                     // Check if a value has been found on the board
                     if (board.checkForKnownValue())
                     {
-                        // Update progress
-                        pBackgroundSudokuSolver.ReportProgress(++progress);
                         continue;
                     }
 
@@ -425,58 +377,58 @@ namespace SudokuSolver
                     // Only Possibility Technique
                     //  - There is only one value that can possibly go in a square
                     // ###############################################################################################################
+                    Boolean valueFound = false;
                     foreach (Entity entity in board.Entities)
                     {
                         foreach (Square square in entity.Squares)
                         {
-                            if (square.PossibleValues.Count == 1)
+                            List<byte> possibleValues = new List<byte>();
+
+                            // Check how many of the values in the entity can possibly go in this square
+                            foreach (byte value in entity.UnknownValues)
                             {
-                                foreach (Square eliminateSquare in entity.Squares)
+                                if (entity.candidateSquaresForValue(value).Contains(square))
                                 {
-                                    if (eliminateSquare != square)
-                                    {
-                                        eliminateSquare.eliminatePossibleValue(square.PossibleValues[0]);
-                                    }
+                                    possibleValues.Add(value);
                                 }
                             }
+
+                            // If only one value can go in this square, then insert that value into the square
+                            if (possibleValues.Count == 1)
+                            {
+                                board.setKnownValue(square.Row, square.Column, possibleValues[0]);
+                                valueFound = true;
+                            }
+
                         }
                     }
 
-                    if (board.checkForKnownValue())
+                    // Check if a value was found on the board
+                    if (valueFound)
                     {
-                        // Update progress
-                        pBackgroundSudokuSolver.ReportProgress(++progress);
                         continue;
                     }
 
                     // ###############################################################################################################
-                    // Possible Pair Shadow Technique
-                    //  - If there are only two possible squares where a value can go within an entity and those square are 
+                    // Possible Value Overrlap Technique
+                    //  - If there are only two possible squares where a value can go within an entity and both those square are 
                     //    also part of a second entity, that value can go nowhere else but those two squares in the second entity 
                     //  - TODO: Make this a possible pair and triple shadow
                     // ###############################################################################################################
                     foreach (Entity entity in board.Entities)
                     {
-                        // For each possible value in the entity, check if there is only two squares where it can be
                         foreach (byte value in entity.UnknownValues)
                         {
-                            List<Square> candidateSquares = new List<Square>();
+                            List<Square> candidateSquares = entity.candidateSquaresForValue(value);
 
-                            foreach (Square square in entity.Squares)
-                            {
-                                if (square.PossibleValues.Contains(value))
-                                {
-                                    candidateSquares.Add(square);
-                                }
-                            }
-
-                            // If the candidate square are entirely within another entity then eliminate the possible value
-                            // from all other squares in that entity
+                            // For each possible value in the entity, check if there is only two squares where it can be
                             if (candidateSquares.Count == 2)
                             {
                                 // Check if any other entity also contains these two squares
                                 foreach (Entity overlapEntity in board.Entities)
                                 {
+                                    // If the candidate square are entirely within another entity then eliminate the possible value
+                                    // from all other squares in that entity
                                     if (!candidateSquares.Except(overlapEntity.Squares).Any())
                                     {
                                         foreach (Square square in overlapEntity.Squares.Except(candidateSquares))
@@ -492,8 +444,6 @@ namespace SudokuSolver
                     // Check if a value has been found on the board
                     if (board.checkForKnownValue())
                     {
-                        // Update progress
-                        pBackgroundSudokuSolver.ReportProgress(++progress);
                         continue;
                     }
 
@@ -510,22 +460,6 @@ namespace SudokuSolver
                             continue;
                         }
 
-                        // Create dictionary of possible squares for each unknown value in the entity
-                        Dictionary<byte, List<Square>> possibleSquareSets = new Dictionary<byte, List<Square>>();
-                        foreach (byte value in entity.UnknownValues)
-                        {
-                            List<Square> candidateSquares = new List<Square>();
-
-                            foreach (Square square in entity.Squares)
-                            {
-                                if (square.PossibleValues.Contains(value))
-                                {
-                                    candidateSquares.Add(square);
-                                }
-                            }
-                            possibleSquareSets.Add(value, candidateSquares);
-                        }
-                        
                         // Create list of possible unknown value combinations. Size of combinations is n, where n is 2 - ((unkown values count) - 1)
                         List<List<byte>>[] combos = new List<List<byte>>[entity.UnknownValues.Count - 2];
                         for (int i = 0; i < entity.UnknownValues.Count - 2; i++)
@@ -533,6 +467,9 @@ namespace SudokuSolver
                             combos[i] = new List<List<byte>>();
                         }
 
+                        // Use binary counting to generate each of the possible combinations
+                        // There will be (1 << entity.UnknownValues.Count) combinations, but we through away the empty combination,
+                        // the full combination, and any combinations with only one element
                         for (int n = 1; n < ((1 << entity.UnknownValues.Count) - 1); n++)
                         {
                             List<byte> combo = new List<byte>();
@@ -555,16 +492,13 @@ namespace SudokuSolver
                         {
                             foreach (List<byte> combosSizeN in combos[n])
                             {
-                                IEnumerable<Square> union = new List<Square>();
-                                foreach (byte value in combosSizeN)
+                                IEnumerable<Square> squareUnion = new List<Square>();
+                                combosSizeN.ForEach(value => squareUnion = squareUnion.Concat(entity.candidateSquaresForValue(value)));
+
+                                squareUnion = squareUnion.Distinct();
+                                if (squareUnion.Count() == n + 2)
                                 {
-                                    union = union.Union(possibleSquareSets[value]);
-                                }
-                                
-                                List<Square> unionList = union.ToList();
-                                if (unionList.Count == n + 2)
-                                {
-                                    foreach (Square square in unionList)
+                                    foreach (Square square in squareUnion)
                                     {
                                         foreach (byte value in entity.UnknownValues.Except(combosSizeN))
                                         {
@@ -579,49 +513,106 @@ namespace SudokuSolver
                     // Check if a value has been found on the board
                     if (board.checkForKnownValue())
                     {
-                        // Update progress
-                        pBackgroundSudokuSolver.ReportProgress(++progress);
                         continue;
                     }
 
                     // #############################################################################################################
-                    // TODO - Think of a name for this technique
+                    // Dual Enitity Shadow Technique
+                    // - If two entities have only two possible squares for a value and those possible squares an the same two columns
+                    //   or the same two rows, then those two rows or columns cannot have that value anywhere else except in the squares
                     // #############################################################################################################
-
-                    List<Dictionary<byte, List<Square>>> entityPossibleSquareDictionaries = new List<Dictionary<byte, List<Square>>>();
-                    foreach (Entity entity in board.Entities)
+                    foreach (Entity entityA in board.Entities)
                     {
-                        Dictionary<byte, List<Square>> possibleSquareSets = new Dictionary<byte, List<Square>>();
-                        foreach (byte value in entity.UnknownValues)
+                        foreach (byte value in entityA.UnknownValues)
                         {
-                            List<Square> candidateSquares = new List<Square>();
-
-                            foreach (Square square in entity.Squares)
-                            {
-                                if (square.PossibleValues.Contains(value))
+                            List<Square> candidateSquaresA = entityA.candidateSquaresForValue(value);
+                            if (candidateSquaresA.Count == 2)
+                            { 
+                                foreach (Entity entityB in board.Entities)
                                 {
-                                    candidateSquares.Add(square);
+                                    List<Square> candidateSquaresB = entityB.candidateSquaresForValue(value);
+                                    if (!candidateSquaresA.SequenceEqual(candidateSquaresB) && candidateSquaresB.Count == 2)
+                                    {
+                                        // Check if the two possible value sets share the same two rows
+                                        if ((candidateSquaresA[0].Row == candidateSquaresB[0].Row
+                                            && candidateSquaresA[1].Row == candidateSquaresB[1].Row))
+                                        {
+                                            for (int i = 0; i < Constants.BOARD_SIZE; i++)
+                                            { 
+                                                if(i != candidateSquaresA[0].Column && i != candidateSquaresB[0].Column)
+                                                {
+                                                    board.Grid[candidateSquaresA[0].Row, i].eliminatePossibleValue(value);
+                                                }
+
+                                                if (i != candidateSquaresA[1].Column && i != candidateSquaresB[1].Column)
+                                                {
+                                                    board.Grid[candidateSquaresA[1].Row, i].eliminatePossibleValue(value);
+                                                }
+                                            }
+                                        }
+
+                                        // Check if the two possible value sets share the same two rows
+                                        if ((candidateSquaresA[0].Row == candidateSquaresB[1].Row
+                                          && candidateSquaresA[1].Row == candidateSquaresB[0].Row))
+                                        {
+                                            for (int i = 0; i < Constants.BOARD_SIZE; i++)
+                                            {
+                                                if (i != candidateSquaresA[0].Column && i != candidateSquaresB[1].Column)
+                                                {
+                                                    board.Grid[candidateSquaresA[0].Row, i].eliminatePossibleValue(value);
+                                                }
+
+                                                if (i != candidateSquaresA[1].Column && i != candidateSquaresB[0].Column)
+                                                {
+                                                    board.Grid[candidateSquaresA[1].Row, i].eliminatePossibleValue(value);
+                                                }
+                                            }
+                                        }
+
+                                        // Check if the two possible value sets share the same two columns
+                                        if ((candidateSquaresA[0].Column == candidateSquaresB[0].Column
+                                            && candidateSquaresA[1].Column == candidateSquaresB[1].Column))
+                                        {
+                                            for (int i = 0; i < Constants.BOARD_SIZE; i++)
+                                            {
+                                                if (i != candidateSquaresA[0].Row && i != candidateSquaresB[0].Row)
+                                                {
+                                                    board.Grid[i, candidateSquaresA[0].Column].eliminatePossibleValue(value);
+                                                }
+
+                                                if (i != candidateSquaresA[1].Row && i != candidateSquaresB[1].Row)
+                                                {
+                                                    board.Grid[i, candidateSquaresA[1].Column].eliminatePossibleValue(value);
+                                                }
+                                            }
+                                        }
+
+                                        // Check if the two possible value sets share the same two columns
+                                        if ((candidateSquaresA[0].Column == candidateSquaresB[1].Column
+                                          && candidateSquaresA[1].Column == candidateSquaresB[0].Column))
+                                        {
+                                            for (int i = 0; i < Constants.BOARD_SIZE; i++)
+                                            {
+                                                if (i != candidateSquaresA[0].Row && i != candidateSquaresB[1].Row)
+                                                {
+                                                    board.Grid[i, candidateSquaresA[0].Column].eliminatePossibleValue(value);
+                                                }
+
+                                                if (i != candidateSquaresA[1].Row && i != candidateSquaresB[0].Row)
+                                                {
+                                                    board.Grid[i, candidateSquaresA[1].Column].eliminatePossibleValue(value);
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
-                            possibleSquareSets.Add(value, candidateSquares);
                         }
-
-                        entityPossibleSquareDictionaries.Add(possibleSquareSets);
                     }
-
-                    foreach (Dictionary<byte, List<Square>> possibleSquareSets in entityPossibleSquareDictionaries)
-                    {
-                    
-                    
-                    }
-
-
-
+     
                     // Check if a value has been found on the board
                     if (board.checkForKnownValue())
                     {
-                        // Update progress
-                        pBackgroundSudokuSolver.ReportProgress(++progress);
                         continue;
                     }
                     else
@@ -629,9 +620,6 @@ namespace SudokuSolver
                         return SolveResult.createInvalidResult();
                     }      
                 }
-
-              
-
             }
             catch (Exception e)
             {
