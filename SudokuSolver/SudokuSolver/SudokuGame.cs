@@ -12,9 +12,9 @@ namespace SudokuSolver
 {
     public class SudokuGame
     {
-        private byte[] mSudokuGivenValues;
-        private byte[] mSudokuEnteredValues;
-        private byte[] mSudokuSolvedValues;
+        private byte[,] mSudokuGivenValues;
+        private byte[,] mSudokuEnteredValues;
+        private byte[,] mSudokuSolvedValues;
         private Boolean mSaved;
         
         /// <summary>
@@ -22,7 +22,7 @@ namespace SudokuSolver
         /// </summary>
         /// <param name="pSudokuGivenValues">The given values for the game</param>
         /// <param name="pSudokuSolvedValues">The solution to the game</param>
-        public SudokuGame(byte[] pSudokuGivenValues, byte[] pSudokuSolvedValues) 
+        public SudokuGame(byte[,] pSudokuGivenValues, byte[,] pSudokuSolvedValues) 
         {
             mSudokuGivenValues = pSudokuGivenValues;
             mSudokuEnteredValues = pSudokuGivenValues;
@@ -48,20 +48,14 @@ namespace SudokuSolver
             return true;
         }
 
-        /// <summary>
-        /// Sets a value in the sudoku
-        /// </summary>
-        /// <param name="pIndex">The index of the square to set</param>
-        /// <param name="pValue">The value of the square to set</param>
-        public void setValue(int pIndex, byte pValue) 
-        {
-            mSudokuEnteredValues[pIndex] = pValue;
-            mSaved = false;
-        }
-
-        public byte[] SolvedValues
+        public byte[,] SolvedValues
         {
             get { return mSudokuSolvedValues; }
+        }
+
+        public byte[,] GivenValues
+        {
+            get { return mSudokuGivenValues; }
         }
     }
 }

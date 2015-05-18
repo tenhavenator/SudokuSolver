@@ -16,19 +16,19 @@ namespace SudokuSolver
 {
     public partial class SudokuUIFrame : Form
     {
-        private readonly static int SIZE = 81;
 
-        private TextBox[] mSudokuTextBoxGrid;
+        private TextBox[,] mSudokuTextBoxGrid;
         private SudokuGame mSudokuGame;
+
+        [System.Runtime.InteropServices.DllImport("user32")]
+        private static extern bool HideCaret(IntPtr hWnd);
 
         public SudokuUIFrame()
         {
             InitializeComponent();
             InitializeTextBoxes();
 
-            this.buttonCustom.Click += new EventHandler(this.buttonCustom_Click);
             this.buttonFinished.Click += new EventHandler(this.buttonFinished_Click);
-            this.buttonExit.Click += new EventHandler(this.buttonExit_Click);
             this.buttonSolve.Click += new EventHandler(this.buttonSolve_Click);
 
         }
@@ -45,100 +45,117 @@ namespace SudokuSolver
         /// 
         private void InitializeTextBoxes()
         {
-            mSudokuTextBoxGrid = new TextBox[SIZE];
-            mSudokuTextBoxGrid[0] = textBox00;
-            mSudokuTextBoxGrid[1] = textBox10;
-            mSudokuTextBoxGrid[2] = textBox20;
-            mSudokuTextBoxGrid[3] = textBox30;
-            mSudokuTextBoxGrid[4] = textBox40;
-            mSudokuTextBoxGrid[5] = textBox50;
-            mSudokuTextBoxGrid[6] = textBox60;
-            mSudokuTextBoxGrid[7] = textBox70;
-            mSudokuTextBoxGrid[8] = textBox80;
+            mSudokuTextBoxGrid = new TextBox[Constants.BOARD_SIZE, Constants.BOARD_SIZE];
+            mSudokuTextBoxGrid[0,0] = textBox00;
+            mSudokuTextBoxGrid[0,1] = textBox10;
+            mSudokuTextBoxGrid[0,2] = textBox20;
+            mSudokuTextBoxGrid[0,3] = textBox30;
+            mSudokuTextBoxGrid[0,4] = textBox40;
+            mSudokuTextBoxGrid[0,5] = textBox50;
+            mSudokuTextBoxGrid[0,6] = textBox60;
+            mSudokuTextBoxGrid[0,7] = textBox70;
+            mSudokuTextBoxGrid[0,8] = textBox80;
 
-            mSudokuTextBoxGrid[9] = textBox01;
-            mSudokuTextBoxGrid[10] = textBox11;
-            mSudokuTextBoxGrid[11] = textBox21;
-            mSudokuTextBoxGrid[12] = textBox31;
-            mSudokuTextBoxGrid[13] = textBox41;
-            mSudokuTextBoxGrid[14] = textBox51;
-            mSudokuTextBoxGrid[15] = textBox61;
-            mSudokuTextBoxGrid[16] = textBox71;
-            mSudokuTextBoxGrid[17] = textBox81;
+            mSudokuTextBoxGrid[1,0] = textBox01;
+            mSudokuTextBoxGrid[1,1] = textBox11;
+            mSudokuTextBoxGrid[1,2] = textBox21;
+            mSudokuTextBoxGrid[1,3] = textBox31;
+            mSudokuTextBoxGrid[1,4] = textBox41;
+            mSudokuTextBoxGrid[1,5] = textBox51;
+            mSudokuTextBoxGrid[1,6] = textBox61;
+            mSudokuTextBoxGrid[1,7] = textBox71;
+            mSudokuTextBoxGrid[1,8] = textBox81;
 
-            mSudokuTextBoxGrid[18] = textBox02;
-            mSudokuTextBoxGrid[19] = textBox12;
-            mSudokuTextBoxGrid[20] = textBox22;
-            mSudokuTextBoxGrid[21] = textBox32;
-            mSudokuTextBoxGrid[22] = textBox42;
-            mSudokuTextBoxGrid[23] = textBox52;
-            mSudokuTextBoxGrid[24] = textBox62;
-            mSudokuTextBoxGrid[25] = textBox72;
-            mSudokuTextBoxGrid[26] = textBox82;
+            mSudokuTextBoxGrid[2,0] = textBox02;
+            mSudokuTextBoxGrid[2,1] = textBox12;
+            mSudokuTextBoxGrid[2,2] = textBox22;
+            mSudokuTextBoxGrid[2,3] = textBox32;
+            mSudokuTextBoxGrid[2,4] = textBox42;
+            mSudokuTextBoxGrid[2,5] = textBox52;
+            mSudokuTextBoxGrid[2,6] = textBox62;
+            mSudokuTextBoxGrid[2,7] = textBox72;
+            mSudokuTextBoxGrid[2,8] = textBox82;
 
-            mSudokuTextBoxGrid[27] = textBox03;
-            mSudokuTextBoxGrid[28] = textBox13;
-            mSudokuTextBoxGrid[29] = textBox23;
-            mSudokuTextBoxGrid[30] = textBox33;
-            mSudokuTextBoxGrid[31] = textBox43;
-            mSudokuTextBoxGrid[32] = textBox53;
-            mSudokuTextBoxGrid[33] = textBox63;
-            mSudokuTextBoxGrid[34] = textBox73;
-            mSudokuTextBoxGrid[35] = textBox83;
+            mSudokuTextBoxGrid[3,0] = textBox03;
+            mSudokuTextBoxGrid[3,1] = textBox13;
+            mSudokuTextBoxGrid[3,2] = textBox23;
+            mSudokuTextBoxGrid[3,3] = textBox33;
+            mSudokuTextBoxGrid[3,4] = textBox43;
+            mSudokuTextBoxGrid[3,5] = textBox53;
+            mSudokuTextBoxGrid[3,6] = textBox63;
+            mSudokuTextBoxGrid[3,7] = textBox73;
+            mSudokuTextBoxGrid[3,8] = textBox83;
 
-            mSudokuTextBoxGrid[36] = textBox04;
-            mSudokuTextBoxGrid[37] = textBox14;
-            mSudokuTextBoxGrid[38] = textBox24;
-            mSudokuTextBoxGrid[39] = textBox34;
-            mSudokuTextBoxGrid[40] = textBox44;
-            mSudokuTextBoxGrid[41] = textBox54;
-            mSudokuTextBoxGrid[42] = textBox64;
-            mSudokuTextBoxGrid[43] = textBox74;
-            mSudokuTextBoxGrid[44] = textBox84;
+            mSudokuTextBoxGrid[4,0] = textBox04;
+            mSudokuTextBoxGrid[4,1] = textBox14;
+            mSudokuTextBoxGrid[4,2] = textBox24;
+            mSudokuTextBoxGrid[4,3] = textBox34;
+            mSudokuTextBoxGrid[4,4] = textBox44;
+            mSudokuTextBoxGrid[4,5] = textBox54;
+            mSudokuTextBoxGrid[4,6] = textBox64;
+            mSudokuTextBoxGrid[4,7] = textBox74;
+            mSudokuTextBoxGrid[4,8] = textBox84;
 
-            mSudokuTextBoxGrid[45] = textBox05;
-            mSudokuTextBoxGrid[46] = textBox15;
-            mSudokuTextBoxGrid[47] = textBox25;
-            mSudokuTextBoxGrid[48] = textBox35;
-            mSudokuTextBoxGrid[49] = textBox45;
-            mSudokuTextBoxGrid[50] = textBox55;
-            mSudokuTextBoxGrid[51] = textBox65;
-            mSudokuTextBoxGrid[52] = textBox75;
-            mSudokuTextBoxGrid[53] = textBox85;
+            mSudokuTextBoxGrid[5,0] = textBox05;
+            mSudokuTextBoxGrid[5,1] = textBox15;
+            mSudokuTextBoxGrid[5,2] = textBox25;
+            mSudokuTextBoxGrid[5,3] = textBox35;
+            mSudokuTextBoxGrid[5,4] = textBox45;
+            mSudokuTextBoxGrid[5,5] = textBox55;
+            mSudokuTextBoxGrid[5,6] = textBox65;
+            mSudokuTextBoxGrid[5,7] = textBox75;
+            mSudokuTextBoxGrid[5,8] = textBox85;
 
-            mSudokuTextBoxGrid[54] = textBox06;
-            mSudokuTextBoxGrid[55] = textBox16;
-            mSudokuTextBoxGrid[56] = textBox26;
-            mSudokuTextBoxGrid[57] = textBox36;
-            mSudokuTextBoxGrid[58] = textBox46;
-            mSudokuTextBoxGrid[59] = textBox56;
-            mSudokuTextBoxGrid[60] = textBox66;
-            mSudokuTextBoxGrid[61] = textBox76;
-            mSudokuTextBoxGrid[62] = textBox86;
+            mSudokuTextBoxGrid[6,0] = textBox06;
+            mSudokuTextBoxGrid[6,1] = textBox16;
+            mSudokuTextBoxGrid[6,2] = textBox26;
+            mSudokuTextBoxGrid[6,3] = textBox36;
+            mSudokuTextBoxGrid[6,4] = textBox46;
+            mSudokuTextBoxGrid[6,5] = textBox56;
+            mSudokuTextBoxGrid[6,6] = textBox66;
+            mSudokuTextBoxGrid[6,7] = textBox76;
+            mSudokuTextBoxGrid[6,8] = textBox86;
 
-            mSudokuTextBoxGrid[63] = textBox07;
-            mSudokuTextBoxGrid[64] = textBox17;
-            mSudokuTextBoxGrid[65] = textBox27;
-            mSudokuTextBoxGrid[66] = textBox37;
-            mSudokuTextBoxGrid[67] = textBox47;
-            mSudokuTextBoxGrid[68] = textBox57;
-            mSudokuTextBoxGrid[69] = textBox67;
-            mSudokuTextBoxGrid[70] = textBox77;
-            mSudokuTextBoxGrid[71] = textBox87;
+            mSudokuTextBoxGrid[7,0] = textBox07;
+            mSudokuTextBoxGrid[7,1] = textBox17;
+            mSudokuTextBoxGrid[7,2] = textBox27;
+            mSudokuTextBoxGrid[7,3] = textBox37;
+            mSudokuTextBoxGrid[7,4] = textBox47;
+            mSudokuTextBoxGrid[7,5] = textBox57;
+            mSudokuTextBoxGrid[7,6] = textBox67;
+            mSudokuTextBoxGrid[7,7] = textBox77;
+            mSudokuTextBoxGrid[7,8] = textBox87;
 
-            mSudokuTextBoxGrid[72] = textBox08;
-            mSudokuTextBoxGrid[73] = textBox18;
-            mSudokuTextBoxGrid[74] = textBox28;
-            mSudokuTextBoxGrid[75] = textBox38;
-            mSudokuTextBoxGrid[76] = textBox48;
-            mSudokuTextBoxGrid[77] = textBox58;
-            mSudokuTextBoxGrid[78] = textBox68;
-            mSudokuTextBoxGrid[79] = textBox78;
-            mSudokuTextBoxGrid[80] = textBox88;
+            mSudokuTextBoxGrid[8,0] = textBox08;
+            mSudokuTextBoxGrid[8,1] = textBox18;
+            mSudokuTextBoxGrid[8,2] = textBox28;
+            mSudokuTextBoxGrid[8,3] = textBox38;
+            mSudokuTextBoxGrid[8,4] = textBox48;
+            mSudokuTextBoxGrid[8,5] = textBox58;
+            mSudokuTextBoxGrid[8,6] = textBox68;
+            mSudokuTextBoxGrid[8,7] = textBox78;
+            mSudokuTextBoxGrid[8,8] = textBox88;
 
-            foreach (TextBox textBox in mSudokuTextBoxGrid)
+            for (int row = 0; row < Constants.BOARD_SIZE; row++)
             {
-                textBox.TextChanged += new EventHandler(this.textBox_Changed);
+                for (int column = 0; column < Constants.BOARD_SIZE; column++)
+                {
+                    mSudokuTextBoxGrid[row, column].TextChanged += new EventHandler(this.textBox_Changed);
+                    mSudokuTextBoxGrid[row, column].MouseMove += new MouseEventHandler(this.textBox_MouseOver);
+                    mSudokuTextBoxGrid[row, column].MouseLeave += new EventHandler(this.textBox_MouseLeave);
+                    mSudokuTextBoxGrid[row, column].MouseDown += new MouseEventHandler(this.textBox_MouseDown);
+                }
+            }
+              
+            
+        }
+
+        private void  textBox_MouseDown(object pSender, EventArgs _pArgs)
+        {
+            if (mSudokuGame != null)
+            {
+                TextBox textBox = pSender as TextBox;
+                HideCaret(textBox.Handle);
             }
         }
 
@@ -150,7 +167,7 @@ namespace SudokuSolver
         /// Invalid input is anything that is not an integer between 1 and 9
         /// </remarks>
         /// 
-        public void textBox_Changed(object pSender, EventArgs _pArgs)
+        private void textBox_Changed(object pSender, EventArgs _pArgs)
         {
             TextBox textBox = pSender as TextBox;
             try
@@ -167,27 +184,42 @@ namespace SudokuSolver
             }
         }
 
+        private void textBox_MouseOver(object pSender,  EventArgs _pArgs)
+        {
+            if (mSudokuGame != null)
+            {
+                TextBox textBox = pSender as TextBox;
+                if (textBox.Text != "")
+                {
+                    textBox.BackColor = Color.LightGreen;
+                }
+                else
+                {
+                    textBox.BackColor = Color.LightSalmon;
+                }
+
+                textBox.Cursor = Cursors.Arrow;
+            }
+        }
+
+        private void textBox_MouseLeave(object pSender, EventArgs _pArgs)
+        {
+            if (mSudokuGame != null)
+            {
+                GridTextBox textBox = pSender as GridTextBox;
+                if (mSudokuGame.GivenValues[textBox.Row, textBox.Column] == 0)
+                {
+                    textBox.BackColor = Color.White;
+                }
+                else 
+                {
+                    textBox.BackColor = Color.LightGray;
+                }
+            }
+        }
+
         #endregion 
         
-        /// <summary>
-        /// The action taken when the "Custom" button is pressed on the menu screen. Brings the panel containing the empty sudoku grid to the foreground.
-        /// </summary>
-        public void buttonCustom_Click(object sender, EventArgs e)
-        {
-            labelFinished.Visible = true;
-            buttonFinished.Visible = true;
-
-            panel2.BringToFront();
-        }
-
-        /// <summary>
-        /// The action taken when the "Exit" button is pressed from the menu screen. Exits the program.
-        /// </summary>
-        public void buttonExit_Click(object sender, EventArgs e)
-        {
-            Environment.Exit(0);
-        }
-
         /// <summary>
         /// The action taken when the solve is press on the game screen.
         /// </summary>
@@ -196,12 +228,15 @@ namespace SudokuSolver
             DialogResult result =  MessageBox.Show("Are you sure you want to solve the sudoku?", "Solve Sudoku", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
             if (result == DialogResult.OK)
             {
-                for (int i = 0; i < 81; i++)
+
+                for (int row = 0; row < Constants.BOARD_SIZE; row++)
                 {
-                    mSudokuTextBoxGrid[i].Text = Convert.ToString(mSudokuGame.SolvedValues[i]);
+                    for (int column = 0; column < Constants.BOARD_SIZE; column++)
+                    {
+                        mSudokuTextBoxGrid[row, column].Text = Convert.ToString(mSudokuGame.SolvedValues[row, column]);
+                    }
                 }
             }
-        
         }
 
         /// <summary>
@@ -209,17 +244,22 @@ namespace SudokuSolver
         /// </summary>
         public void buttonFinished_Click(object sender, EventArgs e)
         {
-            byte[] sudokuValues = new byte[SIZE];
+            byte[,] sudokuValues = new byte[Constants.BOARD_SIZE, Constants.BOARD_SIZE];
 
-            for(int i = 0; i < SIZE; i++)
+
+            for (int row = 0; row < Constants.BOARD_SIZE; row++)
             {
-                if (mSudokuTextBoxGrid[i].Text.Equals(""))
+                for (int column = 0; column < Constants.BOARD_SIZE; column++)
                 {
-                    sudokuValues[i] = 0;
-                }
-                else
-                {
-                    sudokuValues[i] = Convert.ToByte(mSudokuTextBoxGrid[i].Text);
+                
+                    if (mSudokuTextBoxGrid[row, column].Text.Equals(""))
+                    {
+                        sudokuValues[row, column] = 0;
+                    }
+                    else
+                    {
+                        sudokuValues[row, column] = Convert.ToByte(mSudokuTextBoxGrid[row, column].Text);
+                    }
                 }
             }
 
@@ -232,7 +272,31 @@ namespace SudokuSolver
                 case SolveResult.SUCCESS:
                     labelFinished.Visible = false;
                     buttonFinished.Visible = false;
-                    startGame(sudokuValues, result.SolveResultValues);
+
+                    labelSolveDetails.Visible = true;
+                    buttonSolve.Visible = true;
+                    buttonNext.Visible = true;
+                    buttonBack.Visible = true;
+                    buttonClear.Visible = true;
+
+                    mSudokuGame = new SudokuGame(sudokuValues, result.SolveResultValues);
+
+                    for (int row = 0; row < Constants.BOARD_SIZE; row++)
+                    {
+                        for (int column = 0; column < Constants.BOARD_SIZE; column++)
+                        {
+                            mSudokuTextBoxGrid[row, column].ReadOnly = true;
+                            if (mSudokuGame.GivenValues[row, column] != 0)
+                            {
+                                mSudokuTextBoxGrid[row, column].BackColor = Color.LightGray;
+                            }
+                            else
+                            {
+                                mSudokuTextBoxGrid[row, column].BackColor = Color.White;
+                            }
+                        }
+                    }
+
                     break;
 
                 case SolveResult.INVALID:
@@ -251,25 +315,28 @@ namespace SudokuSolver
                     break;
             }
         }
+    }
 
-        /// <summary>
-        /// Starts a new game
-        /// </summary>
-        /// <param name="pSudokuGivenValues">The given values for the game</param>
-        /// <param name="pSudokuSolvedValues">The solution to the game</param>
-        private void startGame(byte[] pSudokuGivenValues, byte[] pSudokuSolvedValues)
+    public class GridTextBox : TextBox
+    {
+        private int mRow;
+        private int mColumn;
+
+        public GridTextBox(int pRow, int pColumn)
         {
-            mSudokuGame = new SudokuGame(pSudokuGivenValues, pSudokuSolvedValues);
-
-            for (int i = 0; i < SIZE; i++)
-            {
-                if (pSudokuGivenValues[i] != 0)
-                {
-                    mSudokuTextBoxGrid[i].ReadOnly = true;
-                }
-            }
-
-            buttonSolve.Visible = true;
+            mRow = pRow;
+            mColumn = pColumn;
         }
+
+        public int Row
+        {
+            get { return mRow; }
+        }
+
+        public int Column
+        {
+            get { return mColumn; }
+        }
+    
     }
 }

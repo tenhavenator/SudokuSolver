@@ -20,9 +20,9 @@ namespace SudokuSolver
     /// </summary>
     public abstract partial class BackgroundWorkerFrame : Form
     {
-        protected byte[] mSudokuValues;
+        protected byte[,] mSudokuValues;
 
-        public BackgroundWorkerFrame(byte[] pSudokuValues)
+        public BackgroundWorkerFrame(byte[,] pSudokuValues)
         {
             InitializeComponent();
             InitializeBackgroundWorker();
@@ -97,7 +97,7 @@ namespace SudokuSolver
     {
         private SolveResult mSolveResult;
 
-        public BackgroundSolveWorkerFrame(byte[] pSudokuValues) : base(pSudokuValues)
+        public BackgroundSolveWorkerFrame(byte[,] pSudokuValues) : base(pSudokuValues)
         {
             label1.Text = "Loading and checking sudoku...";
         }

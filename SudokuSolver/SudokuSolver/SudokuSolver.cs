@@ -308,7 +308,7 @@ namespace SudokuSolver
         /// <summary>
         /// Solves a given sudoku. 
         /// </summary>
-        public static SolveResult solve(byte[] pSudokuValues, BackgroundWorker pBackgroundSudokuSolver)
+        public static SolveResult solve(byte[,] pSudokuValues, BackgroundWorker pBackgroundSudokuSolver)
         {
             try
             { 
@@ -316,25 +316,25 @@ namespace SudokuSolver
                 double progress = 0.0;
 
                 // Set initial values
-                for (int i = 0; i < pSudokuValues.Length; i++)
+                for (int row = 0; row < Constants.BOARD_SIZE; row++)
                 {
-                    // Check if operation was cancelled
-                    if (pBackgroundSudokuSolver.CancellationPending)
+                    for (int column = 0; column < Constants.BOARD_SIZE; column++)
                     {
-                        return SolveResult.createCancelledResult();
-                    }
+                        // Check if operation was cancelled
+                        if (pBackgroundSudokuSolver.CancellationPending)
+                        {
+                            return SolveResult.createCancelledResult();
+                        }
 
-                    if (pSudokuValues[i] != 0)
-                    {
-                        // Update progress
-                        progress += VALUE_PERCENT;
-                        pBackgroundSudokuSolver.ReportProgress(Convert.ToInt32(progress));
-                        Thread.Sleep(SLEEP_TIME_MS);
+                        if (pSudokuValues[row, column] != 0)
+                        {
+                            // Update progress
+                            progress += VALUE_PERCENT;
+                            pBackgroundSudokuSolver.ReportProgress(Convert.ToInt32(progress));
+                            Thread.Sleep(SLEEP_TIME_MS);
 
-                        int row = i / Constants.BOARD_SIZE;
-                        int column = i % Constants.BOARD_SIZE;
-
-                        board.setKnownValue(row, column, pSudokuValues[i]);
+                            board.setKnownValue(row, column, pSudokuValues[row, column]);
+                        }
                     }
                 }
 
@@ -355,13 +355,13 @@ namespace SudokuSolver
                     // Check if the sudoku is solved
                     if (board.isSolved())
                     {
-                        byte[] solvedValues = new byte[81];
-                        for (int i = 0; i < pSudokuValues.Length; i++)
+                        byte[,] solvedValues = new byte[Constants.BOARD_SIZE,Constants.BOARD_SIZE];
+                        for (int row = 0; row < Constants.BOARD_SIZE; row++)
                         {
-                            int row = i / Constants.BOARD_SIZE;
-                            int column = i % Constants.BOARD_SIZE;
-
-                            solvedValues[i] = board.Grid[row, column].Value;
+                            for (int column = 0; column < Constants.BOARD_SIZE; column++)
+                            {
+                                solvedValues[row, column] = board.Grid[row, column].Value;
+                            }
                         }
 
                         return SolveResult.createSuccessResult(solvedValues);

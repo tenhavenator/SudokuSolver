@@ -18,7 +18,7 @@ namespace SudokuSolver
         public const int CANCELLED = 3;
 
         private int mResultType;
-        private byte[] mSolvedSudoku;
+        private byte[,] mSolvedSudoku;
         private string mErrorMessage;
 
         private SolveResult(int pResultType)
@@ -30,7 +30,7 @@ namespace SudokuSolver
         /// Creates a solve result for a successfully solved sudoku
         /// </summary>
         /// <param name="pSolvedSudoku">The values for the successfully solved sudoku</param>
-        public static SolveResult createSuccessResult(byte[] pSolvedSudoku)
+        public static SolveResult createSuccessResult(byte[,] pSolvedSudoku)
         {
             SolveResult result = new SolveResult(SUCCESS);
             result.SolveResultValues = pSolvedSudoku;
@@ -77,7 +77,7 @@ namespace SudokuSolver
         /// <summary>
         /// Property to access the result of solved sudoku
         /// </summary>
-        public byte[] SolveResultValues
+        public byte[,] SolveResultValues
         {
             get { return mSolvedSudoku; }
             set { mSolvedSudoku = value; }

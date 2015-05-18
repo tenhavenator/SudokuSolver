@@ -33,129 +33,120 @@ namespace SudokuSolver
         private void InitializeComponent()
         {
             this.labelTitle = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.labelBottom = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.labelSolveDetails = new System.Windows.Forms.Label();
+            this.buttonBack = new System.Windows.Forms.Button();
+            this.buttonNext = new System.Windows.Forms.Button();
+            this.buttonClear = new System.Windows.Forms.Button();
             this.buttonSolve = new System.Windows.Forms.Button();
             this.buttonFinished = new System.Windows.Forms.Button();
             this.labelFinished = new System.Windows.Forms.Label();
             this.tableLayoutPanelMain = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel22 = new System.Windows.Forms.TableLayoutPanel();
-            this.textBox88 = new System.Windows.Forms.TextBox();
-            this.textBox68 = new System.Windows.Forms.TextBox();
-            this.textBox66 = new System.Windows.Forms.TextBox();
-            this.textBox76 = new System.Windows.Forms.TextBox();
-            this.textBox86 = new System.Windows.Forms.TextBox();
-            this.textBox67 = new System.Windows.Forms.TextBox();
-            this.textBox77 = new System.Windows.Forms.TextBox();
-            this.textBox87 = new System.Windows.Forms.TextBox();
-            this.textBox78 = new System.Windows.Forms.TextBox();
-            this.tableLayoutPanel21 = new System.Windows.Forms.TableLayoutPanel();
-            this.textBox58 = new System.Windows.Forms.TextBox();
-            this.textBox48 = new System.Windows.Forms.TextBox();
-            this.textBox38 = new System.Windows.Forms.TextBox();
-            this.textBox36 = new System.Windows.Forms.TextBox();
-            this.textBox46 = new System.Windows.Forms.TextBox();
-            this.textBox56 = new System.Windows.Forms.TextBox();
-            this.textBox37 = new System.Windows.Forms.TextBox();
-            this.textBox47 = new System.Windows.Forms.TextBox();
-            this.textBox57 = new System.Windows.Forms.TextBox();
-            this.tableLayoutPanel20 = new System.Windows.Forms.TableLayoutPanel();
-            this.textBox28 = new System.Windows.Forms.TextBox();
-            this.textBox08 = new System.Windows.Forms.TextBox();
-            this.textBox06 = new System.Windows.Forms.TextBox();
-            this.textBox16 = new System.Windows.Forms.TextBox();
-            this.textBox26 = new System.Windows.Forms.TextBox();
-            this.textBox07 = new System.Windows.Forms.TextBox();
-            this.textBox17 = new System.Windows.Forms.TextBox();
-            this.textBox27 = new System.Windows.Forms.TextBox();
-            this.textBox18 = new System.Windows.Forms.TextBox();
+            this.textBox88 = new GridTextBox(8, 8);
+            this.textBox78 = new GridTextBox(8, 7); 
+            this.textBox68 = new GridTextBox(8, 6);
+            this.textBox67 = new GridTextBox(7, 6);
+            this.textBox77 = new GridTextBox(7, 7);
+            this.textBox87 = new GridTextBox(7, 8);
+            this.textBox66 = new GridTextBox(6, 6);
+            this.textBox76 = new GridTextBox(6, 7); 
+            this.textBox86 = new GridTextBox(6, 8); 
             this.tableLayoutPanel12 = new System.Windows.Forms.TableLayoutPanel();
-            this.textBox85 = new System.Windows.Forms.TextBox();
-            this.textBox65 = new System.Windows.Forms.TextBox();
-            this.textBox63 = new System.Windows.Forms.TextBox();
-            this.textBox73 = new System.Windows.Forms.TextBox();
-            this.textBox83 = new System.Windows.Forms.TextBox();
-            this.textBox64 = new System.Windows.Forms.TextBox();
-            this.textBox74 = new System.Windows.Forms.TextBox();
-            this.textBox84 = new System.Windows.Forms.TextBox();
-            this.textBox75 = new System.Windows.Forms.TextBox();
-            this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
-            this.textBox55 = new System.Windows.Forms.TextBox();
-            this.textBox45 = new System.Windows.Forms.TextBox();
-            this.textBox35 = new System.Windows.Forms.TextBox();
-            this.textBox33 = new System.Windows.Forms.TextBox();
-            this.textBox43 = new System.Windows.Forms.TextBox();
-            this.textBox53 = new System.Windows.Forms.TextBox();
-            this.textBox34 = new System.Windows.Forms.TextBox();
-            this.textBox54 = new System.Windows.Forms.TextBox();
-            this.textBox44 = new System.Windows.Forms.TextBox();
-            this.tableLayoutPanel10 = new System.Windows.Forms.TableLayoutPanel();
-            this.textBox05 = new System.Windows.Forms.TextBox();
-            this.textBox03 = new System.Windows.Forms.TextBox();
-            this.textBox13 = new System.Windows.Forms.TextBox();
-            this.textBox23 = new System.Windows.Forms.TextBox();
-            this.textBox04 = new System.Windows.Forms.TextBox();
-            this.textBox14 = new System.Windows.Forms.TextBox();
-            this.textBox24 = new System.Windows.Forms.TextBox();
-            this.textBox15 = new System.Windows.Forms.TextBox();
-            this.textBox25 = new System.Windows.Forms.TextBox();
+            this.textBox58 = new GridTextBox(8, 5);
+            this.textBox48 = new GridTextBox(8, 4);
+            this.textBox38 = new GridTextBox(8, 3);
+            this.textBox36 = new GridTextBox(6, 3);
+            this.textBox46 = new GridTextBox(6, 4);
+            this.textBox56 = new GridTextBox(6, 5);
+            this.textBox37 = new GridTextBox(7, 3);
+            this.textBox47 = new GridTextBox(7, 4);
+            this.textBox57 = new GridTextBox(7, 5);
             this.tableLayoutPanel02 = new System.Windows.Forms.TableLayoutPanel();
-            this.textBox82 = new System.Windows.Forms.TextBox();
-            this.textBox72 = new System.Windows.Forms.TextBox();
-            this.textBox62 = new System.Windows.Forms.TextBox();
-            this.textBox81 = new System.Windows.Forms.TextBox();
-            this.textBox71 = new System.Windows.Forms.TextBox();
-            this.textBox61 = new System.Windows.Forms.TextBox();
-            this.textBox80 = new System.Windows.Forms.TextBox();
-            this.textBox70 = new System.Windows.Forms.TextBox();
-            this.textBox60 = new System.Windows.Forms.TextBox();
+            this.textBox28 = new GridTextBox(8, 2);
+            this.textBox08 = new GridTextBox(8, 0);
+            this.textBox06 = new GridTextBox(6, 0);
+            this.textBox16 = new GridTextBox(6, 1);
+            this.textBox26 = new GridTextBox(6, 2);
+            this.textBox07 = new GridTextBox(7, 0);
+            this.textBox17 = new GridTextBox(7, 1); 
+            this.textBox27 = new GridTextBox(7, 2);
+            this.textBox18 = new GridTextBox(8, 1);
+            this.tableLayoutPanel21 = new System.Windows.Forms.TableLayoutPanel();
+            this.textBox63 = new GridTextBox(3, 6);
+            this.textBox73 = new GridTextBox(3, 7);
+            this.textBox83 = new GridTextBox(3, 8);
+            this.textBox64 = new GridTextBox(4, 6);
+            this.textBox74 = new GridTextBox(4, 7);
+            this.textBox84 = new GridTextBox(4, 8);
+            this.textBox85 = new GridTextBox(5, 8);
+            this.textBox75 = new GridTextBox(5, 7);
+            this.textBox65 = new GridTextBox(5, 6); 
+            this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
+            this.textBox55 = new GridTextBox(5, 5);
+            this.textBox45 = new GridTextBox(5, 4);
+            this.textBox35 = new GridTextBox(5, 3);
+            this.textBox33 = new GridTextBox(3, 3); 
+            this.textBox43 = new GridTextBox(3, 4);
+            this.textBox53 = new GridTextBox(3, 5);
+            this.textBox34 = new GridTextBox(4, 3);
+            this.textBox44 = new GridTextBox(4, 4);
+            this.textBox54 = new GridTextBox(4, 5);
             this.tableLayoutPanel01 = new System.Windows.Forms.TableLayoutPanel();
-            this.textBox52 = new System.Windows.Forms.TextBox();
-            this.textBox32 = new System.Windows.Forms.TextBox();
-            this.textBox30 = new System.Windows.Forms.TextBox();
-            this.textBox40 = new System.Windows.Forms.TextBox();
-            this.textBox50 = new System.Windows.Forms.TextBox();
-            this.textBox31 = new System.Windows.Forms.TextBox();
-            this.textBox41 = new System.Windows.Forms.TextBox();
-            this.textBox51 = new System.Windows.Forms.TextBox();
-            this.textBox42 = new System.Windows.Forms.TextBox();
+            this.textBox03 = new GridTextBox(3, 0);
+            this.textBox13 = new GridTextBox(3, 1);
+            this.textBox23 = new GridTextBox(3, 2);
+            this.textBox04 = new GridTextBox(4, 0);
+            this.textBox14 = new GridTextBox(4, 1);
+            this.textBox24 = new GridTextBox(4, 2);
+            this.textBox05 = new GridTextBox(5, 0);
+            this.textBox15 = new GridTextBox(5, 1);
+            this.textBox25 = new GridTextBox(5, 2);
+            this.tableLayoutPanel20 = new System.Windows.Forms.TableLayoutPanel();
+            this.textBox82 = new GridTextBox(2, 8);
+            this.textBox72 = new GridTextBox(2, 7);
+            this.textBox62 = new GridTextBox(2, 6);
+            this.textBox81 = new GridTextBox(1, 8);
+            this.textBox71 = new GridTextBox(1, 7);
+            this.textBox61 = new GridTextBox(1, 6);
+            this.textBox80 = new GridTextBox(0, 8);
+            this.textBox70 = new GridTextBox(0, 7);
+            this.textBox60 = new GridTextBox(0, 6);
+            this.tableLayoutPanel10 = new System.Windows.Forms.TableLayoutPanel();
+            this.textBox52 = new GridTextBox(2, 5);
+            this.textBox42 = new GridTextBox(2, 4);
+            this.textBox32 = new GridTextBox(2, 3);
+            this.textBox51 = new GridTextBox(1, 5);
+            this.textBox41 = new GridTextBox(1, 4);
+            this.textBox31 = new GridTextBox(1, 3);
+            this.textBox50 = new GridTextBox(0, 5);
+            this.textBox40 = new GridTextBox(0, 4);
+            this.textBox30 = new GridTextBox(0, 3);
+
             this.tableLayoutPanel00 = new System.Windows.Forms.TableLayoutPanel();
-            this.textBox22 = new System.Windows.Forms.TextBox();
-            this.textBox12 = new System.Windows.Forms.TextBox();
-            this.textBox02 = new System.Windows.Forms.TextBox();
-            this.textBox21 = new System.Windows.Forms.TextBox();
-            this.textBox11 = new System.Windows.Forms.TextBox();
-            this.textBox01 = new System.Windows.Forms.TextBox();
-            this.textBox20 = new System.Windows.Forms.TextBox();
-            this.textBox10 = new System.Windows.Forms.TextBox();
-            this.textBox00 = new System.Windows.Forms.TextBox();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.buttonExit = new System.Windows.Forms.Button();
-            this.buttonCustom = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.backgroundSolveWorker = new System.ComponentModel.BackgroundWorker();
-            this.backgroundHintWorker = new System.ComponentModel.BackgroundWorker();
+            this.textBox22 = new GridTextBox(2, 2);
+            this.textBox12 = new GridTextBox(2, 1);
+            this.textBox02 = new GridTextBox(2, 0);
+            this.textBox21 = new GridTextBox(1, 2);
+            this.textBox11 = new GridTextBox(1, 1);
+            this.textBox01 = new GridTextBox(1, 0);
+            this.textBox20 = new GridTextBox(0, 2);
+            this.textBox10 = new GridTextBox(0, 1);
+            this.textBox00 = new GridTextBox(0,0);
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.tableLayoutPanelMain.SuspendLayout();
             this.tableLayoutPanel22.SuspendLayout();
-            this.tableLayoutPanel21.SuspendLayout();
-            this.tableLayoutPanel20.SuspendLayout();
             this.tableLayoutPanel12.SuspendLayout();
-            this.tableLayoutPanel11.SuspendLayout();
-            this.tableLayoutPanel10.SuspendLayout();
             this.tableLayoutPanel02.SuspendLayout();
+            this.tableLayoutPanel21.SuspendLayout();
+            this.tableLayoutPanel11.SuspendLayout();
             this.tableLayoutPanel01.SuspendLayout();
+            this.tableLayoutPanel20.SuspendLayout();
+            this.tableLayoutPanel10.SuspendLayout();
             this.tableLayoutPanel00.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelTitle
@@ -172,17 +163,17 @@ namespace SudokuSolver
             this.labelTitle.Text = "Sudoku Solver";
             this.labelTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // label2
+            // labelBottom
             // 
-            this.label2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.label2.Location = new System.Drawing.Point(0, 558);
-            this.label2.Margin = new System.Windows.Forms.Padding(0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(687, 23);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Sudoku Solver. Created by Jeff ten Have. 2015.";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelBottom.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.labelBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.labelBottom.Location = new System.Drawing.Point(0, 558);
+            this.labelBottom.Margin = new System.Windows.Forms.Padding(0);
+            this.labelBottom.Name = "labelBottom";
+            this.labelBottom.Size = new System.Drawing.Size(687, 23);
+            this.labelBottom.TabIndex = 2;
+            this.labelBottom.Text = "Sudoku Solver. Created by Jeff ten Have. 2015.";
+            this.labelBottom.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel2
             // 
@@ -191,7 +182,6 @@ namespace SudokuSolver
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.Controls.Add(this.panel3);
             this.panel2.Controls.Add(this.tableLayoutPanelMain);
-            this.panel2.Controls.Add(this.menuStrip1);
             this.panel2.Location = new System.Drawing.Point(0, 59);
             this.panel2.Margin = new System.Windows.Forms.Padding(0);
             this.panel2.Name = "panel2";
@@ -201,15 +191,54 @@ namespace SudokuSolver
             // panel3
             // 
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel3.Controls.Add(this.labelSolveDetails);
+            this.panel3.Controls.Add(this.buttonBack);
+            this.panel3.Controls.Add(this.buttonNext);
+            this.panel3.Controls.Add(this.buttonClear);
             this.panel3.Controls.Add(this.buttonSolve);
             this.panel3.Controls.Add(this.buttonFinished);
             this.panel3.Controls.Add(this.labelFinished);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel3.Location = new System.Drawing.Point(487, 24);
+            this.panel3.Location = new System.Drawing.Point(487, 0);
             this.panel3.Margin = new System.Windows.Forms.Padding(0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(200, 475);
+            this.panel3.Size = new System.Drawing.Size(200, 499);
             this.panel3.TabIndex = 5;
+            // 
+            // labelSolveDetails
+            // 
+            this.labelSolveDetails.Location = new System.Drawing.Point(3, 145);
+            this.labelSolveDetails.Name = "labelSolveDetails";
+            this.labelSolveDetails.Size = new System.Drawing.Size(159, 45);
+            this.labelSolveDetails.TabIndex = 8;
+            this.labelSolveDetails.Text = "Click on a solved square to see the details of how that value was found.";
+            // 
+            // buttonBack
+            // 
+            this.buttonBack.Location = new System.Drawing.Point(3, 81);
+            this.buttonBack.Name = "buttonBack";
+            this.buttonBack.Size = new System.Drawing.Size(78, 23);
+            this.buttonBack.TabIndex = 7;
+            this.buttonBack.Text = "< Back";
+            this.buttonBack.UseVisualStyleBackColor = true;
+            // 
+            // buttonNext
+            // 
+            this.buttonNext.Location = new System.Drawing.Point(84, 81);
+            this.buttonNext.Name = "buttonNext";
+            this.buttonNext.Size = new System.Drawing.Size(78, 23);
+            this.buttonNext.TabIndex = 6;
+            this.buttonNext.Text = "Show Next >";
+            this.buttonNext.UseVisualStyleBackColor = true;
+            // 
+            // buttonClear
+            // 
+            this.buttonClear.Location = new System.Drawing.Point(3, 37);
+            this.buttonClear.Name = "buttonClear";
+            this.buttonClear.Size = new System.Drawing.Size(75, 23);
+            this.buttonClear.TabIndex = 5;
+            this.buttonClear.Text = "Clear";
+            this.buttonClear.UseVisualStyleBackColor = true;
             // 
             // buttonSolve
             // 
@@ -224,23 +253,21 @@ namespace SudokuSolver
             // buttonFinished
             // 
             this.buttonFinished.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonFinished.Location = new System.Drawing.Point(3, 447);
+            this.buttonFinished.Location = new System.Drawing.Point(3, 471);
             this.buttonFinished.Name = "buttonFinished";
             this.buttonFinished.Size = new System.Drawing.Size(75, 23);
             this.buttonFinished.TabIndex = 2;
             this.buttonFinished.Text = "Finished";
             this.buttonFinished.UseVisualStyleBackColor = true;
-            this.buttonFinished.Visible = false;
             // 
             // labelFinished
             // 
             this.labelFinished.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelFinished.Location = new System.Drawing.Point(3, 409);
+            this.labelFinished.Location = new System.Drawing.Point(3, 433);
             this.labelFinished.Name = "labelFinished";
             this.labelFinished.Size = new System.Drawing.Size(159, 35);
             this.labelFinished.TabIndex = 3;
             this.labelFinished.Text = "Enter your custom sudoku and press \"Finished\"\r\n";
-            this.labelFinished.Visible = false;
             // 
             // tableLayoutPanelMain
             // 
@@ -253,13 +280,13 @@ namespace SudokuSolver
             this.tableLayoutPanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanelMain.Controls.Add(this.tableLayoutPanel22, 2, 2);
-            this.tableLayoutPanelMain.Controls.Add(this.tableLayoutPanel21, 1, 2);
-            this.tableLayoutPanelMain.Controls.Add(this.tableLayoutPanel20, 0, 2);
-            this.tableLayoutPanelMain.Controls.Add(this.tableLayoutPanel12, 2, 1);
+            this.tableLayoutPanelMain.Controls.Add(this.tableLayoutPanel12, 1, 2);
+            this.tableLayoutPanelMain.Controls.Add(this.tableLayoutPanel02, 0, 2);
+            this.tableLayoutPanelMain.Controls.Add(this.tableLayoutPanel21, 2, 1);
             this.tableLayoutPanelMain.Controls.Add(this.tableLayoutPanel11, 1, 1);
-            this.tableLayoutPanelMain.Controls.Add(this.tableLayoutPanel10, 0, 1);
-            this.tableLayoutPanelMain.Controls.Add(this.tableLayoutPanel02, 2, 0);
-            this.tableLayoutPanelMain.Controls.Add(this.tableLayoutPanel01, 1, 0);
+            this.tableLayoutPanelMain.Controls.Add(this.tableLayoutPanel01, 0, 1);
+            this.tableLayoutPanelMain.Controls.Add(this.tableLayoutPanel20, 2, 0);
+            this.tableLayoutPanelMain.Controls.Add(this.tableLayoutPanel10, 1, 0);
             this.tableLayoutPanelMain.Controls.Add(this.tableLayoutPanel00, 0, 0);
             this.tableLayoutPanelMain.ForeColor = System.Drawing.SystemColors.ControlText;
             this.tableLayoutPanelMain.Location = new System.Drawing.Point(69, 37);
@@ -445,34 +472,34 @@ namespace SudokuSolver
             this.textBox78.TabIndex = 8;
             this.textBox78.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // tableLayoutPanel21
+            // tableLayoutPanel12
             // 
-            this.tableLayoutPanel21.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.tableLayoutPanel12.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel21.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tableLayoutPanel21.ColumnCount = 3;
-            this.tableLayoutPanel21.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel21.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel21.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel21.Controls.Add(this.textBox58, 2, 2);
-            this.tableLayoutPanel21.Controls.Add(this.textBox48, 1, 2);
-            this.tableLayoutPanel21.Controls.Add(this.textBox38, 0, 2);
-            this.tableLayoutPanel21.Controls.Add(this.textBox36, 0, 0);
-            this.tableLayoutPanel21.Controls.Add(this.textBox46, 1, 0);
-            this.tableLayoutPanel21.Controls.Add(this.textBox56, 2, 0);
-            this.tableLayoutPanel21.Controls.Add(this.textBox37, 0, 1);
-            this.tableLayoutPanel21.Controls.Add(this.textBox47, 1, 1);
-            this.tableLayoutPanel21.Controls.Add(this.textBox57, 2, 1);
-            this.tableLayoutPanel21.Location = new System.Drawing.Point(134, 267);
-            this.tableLayoutPanel21.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel21.Name = "tableLayoutPanel21";
-            this.tableLayoutPanel21.RowCount = 3;
-            this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel21.Size = new System.Drawing.Size(132, 132);
-            this.tableLayoutPanel21.TabIndex = 7;
+            this.tableLayoutPanel12.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tableLayoutPanel12.ColumnCount = 3;
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel12.Controls.Add(this.textBox58, 2, 2);
+            this.tableLayoutPanel12.Controls.Add(this.textBox48, 1, 2);
+            this.tableLayoutPanel12.Controls.Add(this.textBox38, 0, 2);
+            this.tableLayoutPanel12.Controls.Add(this.textBox36, 0, 0);
+            this.tableLayoutPanel12.Controls.Add(this.textBox46, 1, 0);
+            this.tableLayoutPanel12.Controls.Add(this.textBox56, 2, 0);
+            this.tableLayoutPanel12.Controls.Add(this.textBox37, 0, 1);
+            this.tableLayoutPanel12.Controls.Add(this.textBox47, 1, 1);
+            this.tableLayoutPanel12.Controls.Add(this.textBox57, 2, 1);
+            this.tableLayoutPanel12.Location = new System.Drawing.Point(134, 267);
+            this.tableLayoutPanel12.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel12.Name = "tableLayoutPanel12";
+            this.tableLayoutPanel12.RowCount = 3;
+            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel12.Size = new System.Drawing.Size(132, 132);
+            this.tableLayoutPanel12.TabIndex = 7;
             // 
             // textBox58
             // 
@@ -618,34 +645,34 @@ namespace SudokuSolver
             this.textBox57.TabIndex = 6;
             this.textBox57.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // tableLayoutPanel20
+            // tableLayoutPanel02
             // 
-            this.tableLayoutPanel20.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.tableLayoutPanel02.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel20.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tableLayoutPanel20.ColumnCount = 3;
-            this.tableLayoutPanel20.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel20.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel20.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel20.Controls.Add(this.textBox28, 2, 2);
-            this.tableLayoutPanel20.Controls.Add(this.textBox08, 0, 2);
-            this.tableLayoutPanel20.Controls.Add(this.textBox06, 0, 0);
-            this.tableLayoutPanel20.Controls.Add(this.textBox16, 1, 0);
-            this.tableLayoutPanel20.Controls.Add(this.textBox26, 2, 0);
-            this.tableLayoutPanel20.Controls.Add(this.textBox07, 0, 1);
-            this.tableLayoutPanel20.Controls.Add(this.textBox17, 1, 1);
-            this.tableLayoutPanel20.Controls.Add(this.textBox27, 2, 1);
-            this.tableLayoutPanel20.Controls.Add(this.textBox18, 1, 2);
-            this.tableLayoutPanel20.Location = new System.Drawing.Point(1, 267);
-            this.tableLayoutPanel20.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel20.Name = "tableLayoutPanel20";
-            this.tableLayoutPanel20.RowCount = 3;
-            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel20.Size = new System.Drawing.Size(132, 132);
-            this.tableLayoutPanel20.TabIndex = 6;
+            this.tableLayoutPanel02.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tableLayoutPanel02.ColumnCount = 3;
+            this.tableLayoutPanel02.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel02.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel02.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel02.Controls.Add(this.textBox28, 2, 2);
+            this.tableLayoutPanel02.Controls.Add(this.textBox08, 0, 2);
+            this.tableLayoutPanel02.Controls.Add(this.textBox06, 0, 0);
+            this.tableLayoutPanel02.Controls.Add(this.textBox16, 1, 0);
+            this.tableLayoutPanel02.Controls.Add(this.textBox26, 2, 0);
+            this.tableLayoutPanel02.Controls.Add(this.textBox07, 0, 1);
+            this.tableLayoutPanel02.Controls.Add(this.textBox17, 1, 1);
+            this.tableLayoutPanel02.Controls.Add(this.textBox27, 2, 1);
+            this.tableLayoutPanel02.Controls.Add(this.textBox18, 1, 2);
+            this.tableLayoutPanel02.Location = new System.Drawing.Point(1, 267);
+            this.tableLayoutPanel02.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel02.Name = "tableLayoutPanel02";
+            this.tableLayoutPanel02.RowCount = 3;
+            this.tableLayoutPanel02.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel02.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel02.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel02.Size = new System.Drawing.Size(132, 132);
+            this.tableLayoutPanel02.TabIndex = 6;
             // 
             // textBox28
             // 
@@ -791,34 +818,34 @@ namespace SudokuSolver
             this.textBox18.TabIndex = 8;
             this.textBox18.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // tableLayoutPanel12
+            // tableLayoutPanel21
             // 
-            this.tableLayoutPanel12.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.tableLayoutPanel21.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel12.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tableLayoutPanel12.ColumnCount = 3;
-            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel12.Controls.Add(this.textBox85, 2, 2);
-            this.tableLayoutPanel12.Controls.Add(this.textBox65, 0, 2);
-            this.tableLayoutPanel12.Controls.Add(this.textBox63, 0, 0);
-            this.tableLayoutPanel12.Controls.Add(this.textBox73, 1, 0);
-            this.tableLayoutPanel12.Controls.Add(this.textBox83, 2, 0);
-            this.tableLayoutPanel12.Controls.Add(this.textBox64, 0, 1);
-            this.tableLayoutPanel12.Controls.Add(this.textBox74, 1, 1);
-            this.tableLayoutPanel12.Controls.Add(this.textBox84, 2, 1);
-            this.tableLayoutPanel12.Controls.Add(this.textBox75, 1, 2);
-            this.tableLayoutPanel12.Location = new System.Drawing.Point(267, 134);
-            this.tableLayoutPanel12.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel12.Name = "tableLayoutPanel12";
-            this.tableLayoutPanel12.RowCount = 3;
-            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel12.Size = new System.Drawing.Size(132, 132);
-            this.tableLayoutPanel12.TabIndex = 5;
+            this.tableLayoutPanel21.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tableLayoutPanel21.ColumnCount = 3;
+            this.tableLayoutPanel21.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel21.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel21.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel21.Controls.Add(this.textBox85, 2, 2);
+            this.tableLayoutPanel21.Controls.Add(this.textBox65, 0, 2);
+            this.tableLayoutPanel21.Controls.Add(this.textBox63, 0, 0);
+            this.tableLayoutPanel21.Controls.Add(this.textBox73, 1, 0);
+            this.tableLayoutPanel21.Controls.Add(this.textBox83, 2, 0);
+            this.tableLayoutPanel21.Controls.Add(this.textBox64, 0, 1);
+            this.tableLayoutPanel21.Controls.Add(this.textBox74, 1, 1);
+            this.tableLayoutPanel21.Controls.Add(this.textBox84, 2, 1);
+            this.tableLayoutPanel21.Controls.Add(this.textBox75, 1, 2);
+            this.tableLayoutPanel21.Location = new System.Drawing.Point(267, 134);
+            this.tableLayoutPanel21.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel21.Name = "tableLayoutPanel21";
+            this.tableLayoutPanel21.RowCount = 3;
+            this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel21.Size = new System.Drawing.Size(132, 132);
+            this.tableLayoutPanel21.TabIndex = 5;
             // 
             // textBox85
             // 
@@ -1140,34 +1167,34 @@ namespace SudokuSolver
             this.textBox44.TabIndex = 5;
             this.textBox44.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // tableLayoutPanel10
+            // tableLayoutPanel01
             // 
-            this.tableLayoutPanel10.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.tableLayoutPanel01.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel10.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tableLayoutPanel10.ColumnCount = 3;
-            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel10.Controls.Add(this.textBox05, 0, 2);
-            this.tableLayoutPanel10.Controls.Add(this.textBox03, 0, 0);
-            this.tableLayoutPanel10.Controls.Add(this.textBox13, 1, 0);
-            this.tableLayoutPanel10.Controls.Add(this.textBox23, 2, 0);
-            this.tableLayoutPanel10.Controls.Add(this.textBox04, 0, 1);
-            this.tableLayoutPanel10.Controls.Add(this.textBox14, 1, 1);
-            this.tableLayoutPanel10.Controls.Add(this.textBox24, 2, 1);
-            this.tableLayoutPanel10.Controls.Add(this.textBox15, 1, 2);
-            this.tableLayoutPanel10.Controls.Add(this.textBox25, 2, 2);
-            this.tableLayoutPanel10.Location = new System.Drawing.Point(1, 134);
-            this.tableLayoutPanel10.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel10.Name = "tableLayoutPanel10";
-            this.tableLayoutPanel10.RowCount = 3;
-            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel10.Size = new System.Drawing.Size(132, 132);
-            this.tableLayoutPanel10.TabIndex = 3;
+            this.tableLayoutPanel01.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tableLayoutPanel01.ColumnCount = 3;
+            this.tableLayoutPanel01.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel01.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel01.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel01.Controls.Add(this.textBox05, 0, 2);
+            this.tableLayoutPanel01.Controls.Add(this.textBox03, 0, 0);
+            this.tableLayoutPanel01.Controls.Add(this.textBox13, 1, 0);
+            this.tableLayoutPanel01.Controls.Add(this.textBox23, 2, 0);
+            this.tableLayoutPanel01.Controls.Add(this.textBox04, 0, 1);
+            this.tableLayoutPanel01.Controls.Add(this.textBox14, 1, 1);
+            this.tableLayoutPanel01.Controls.Add(this.textBox24, 2, 1);
+            this.tableLayoutPanel01.Controls.Add(this.textBox15, 1, 2);
+            this.tableLayoutPanel01.Controls.Add(this.textBox25, 2, 2);
+            this.tableLayoutPanel01.Location = new System.Drawing.Point(1, 134);
+            this.tableLayoutPanel01.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel01.Name = "tableLayoutPanel01";
+            this.tableLayoutPanel01.RowCount = 3;
+            this.tableLayoutPanel01.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel01.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel01.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel01.Size = new System.Drawing.Size(132, 132);
+            this.tableLayoutPanel01.TabIndex = 3;
             // 
             // textBox05
             // 
@@ -1313,34 +1340,34 @@ namespace SudokuSolver
             this.textBox25.TabIndex = 9;
             this.textBox25.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // tableLayoutPanel02
+            // tableLayoutPanel20
             // 
-            this.tableLayoutPanel02.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.tableLayoutPanel20.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel02.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tableLayoutPanel02.ColumnCount = 3;
-            this.tableLayoutPanel02.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel02.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel02.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel02.Controls.Add(this.textBox82, 2, 2);
-            this.tableLayoutPanel02.Controls.Add(this.textBox72, 1, 2);
-            this.tableLayoutPanel02.Controls.Add(this.textBox62, 0, 2);
-            this.tableLayoutPanel02.Controls.Add(this.textBox81, 2, 1);
-            this.tableLayoutPanel02.Controls.Add(this.textBox71, 1, 1);
-            this.tableLayoutPanel02.Controls.Add(this.textBox61, 0, 1);
-            this.tableLayoutPanel02.Controls.Add(this.textBox80, 2, 0);
-            this.tableLayoutPanel02.Controls.Add(this.textBox70, 1, 0);
-            this.tableLayoutPanel02.Controls.Add(this.textBox60, 0, 0);
-            this.tableLayoutPanel02.Location = new System.Drawing.Point(267, 1);
-            this.tableLayoutPanel02.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel02.Name = "tableLayoutPanel02";
-            this.tableLayoutPanel02.RowCount = 3;
-            this.tableLayoutPanel02.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel02.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel02.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel02.Size = new System.Drawing.Size(132, 132);
-            this.tableLayoutPanel02.TabIndex = 2;
+            this.tableLayoutPanel20.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tableLayoutPanel20.ColumnCount = 3;
+            this.tableLayoutPanel20.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel20.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel20.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel20.Controls.Add(this.textBox82, 2, 2);
+            this.tableLayoutPanel20.Controls.Add(this.textBox72, 1, 2);
+            this.tableLayoutPanel20.Controls.Add(this.textBox62, 0, 2);
+            this.tableLayoutPanel20.Controls.Add(this.textBox81, 2, 1);
+            this.tableLayoutPanel20.Controls.Add(this.textBox71, 1, 1);
+            this.tableLayoutPanel20.Controls.Add(this.textBox61, 0, 1);
+            this.tableLayoutPanel20.Controls.Add(this.textBox80, 2, 0);
+            this.tableLayoutPanel20.Controls.Add(this.textBox70, 1, 0);
+            this.tableLayoutPanel20.Controls.Add(this.textBox60, 0, 0);
+            this.tableLayoutPanel20.Location = new System.Drawing.Point(267, 1);
+            this.tableLayoutPanel20.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel20.Name = "tableLayoutPanel20";
+            this.tableLayoutPanel20.RowCount = 3;
+            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel20.Size = new System.Drawing.Size(132, 132);
+            this.tableLayoutPanel20.TabIndex = 2;
             // 
             // textBox82
             // 
@@ -1486,37 +1513,37 @@ namespace SudokuSolver
             this.textBox60.TabIndex = 1;
             this.textBox60.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // tableLayoutPanel01
+            // tableLayoutPanel10
             // 
-            this.tableLayoutPanel01.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.tableLayoutPanel10.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel01.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tableLayoutPanel01.ColumnCount = 3;
-            this.tableLayoutPanel01.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel01.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel01.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel01.Controls.Add(this.textBox52, 2, 2);
-            this.tableLayoutPanel01.Controls.Add(this.textBox32, 0, 2);
-            this.tableLayoutPanel01.Controls.Add(this.textBox30, 0, 0);
-            this.tableLayoutPanel01.Controls.Add(this.textBox40, 1, 0);
-            this.tableLayoutPanel01.Controls.Add(this.textBox50, 2, 0);
-            this.tableLayoutPanel01.Controls.Add(this.textBox31, 0, 1);
-            this.tableLayoutPanel01.Controls.Add(this.textBox41, 1, 1);
-            this.tableLayoutPanel01.Controls.Add(this.textBox51, 2, 1);
-            this.tableLayoutPanel01.Controls.Add(this.textBox42, 1, 2);
-            this.tableLayoutPanel01.Location = new System.Drawing.Point(134, 1);
-            this.tableLayoutPanel01.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel01.Name = "tableLayoutPanel01";
-            this.tableLayoutPanel01.RowCount = 3;
-            this.tableLayoutPanel01.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel01.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel01.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel01.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel01.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel01.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel01.Size = new System.Drawing.Size(132, 132);
-            this.tableLayoutPanel01.TabIndex = 1;
+            this.tableLayoutPanel10.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tableLayoutPanel10.ColumnCount = 3;
+            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel10.Controls.Add(this.textBox52, 2, 2);
+            this.tableLayoutPanel10.Controls.Add(this.textBox42, 1, 2);
+            this.tableLayoutPanel10.Controls.Add(this.textBox32, 0, 2);
+            this.tableLayoutPanel10.Controls.Add(this.textBox51, 2, 1);
+            this.tableLayoutPanel10.Controls.Add(this.textBox41, 1, 1);
+            this.tableLayoutPanel10.Controls.Add(this.textBox31, 0, 1);
+            this.tableLayoutPanel10.Controls.Add(this.textBox50, 2, 0);
+            this.tableLayoutPanel10.Controls.Add(this.textBox40, 1, 0);
+            this.tableLayoutPanel10.Controls.Add(this.textBox30, 0, 0);
+            this.tableLayoutPanel10.Location = new System.Drawing.Point(134, 1);
+            this.tableLayoutPanel10.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel10.Name = "tableLayoutPanel10";
+            this.tableLayoutPanel10.RowCount = 3;
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel10.Size = new System.Drawing.Size(132, 132);
+            this.tableLayoutPanel10.TabIndex = 1;
             // 
             // textBox52
             // 
@@ -1534,6 +1561,22 @@ namespace SudokuSolver
             this.textBox52.TabIndex = 1;
             this.textBox52.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // textBox42
+            // 
+            this.textBox42.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox42.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox42.Font = new System.Drawing.Font("Microsoft Sans Serif", 26F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox42.Location = new System.Drawing.Point(44, 87);
+            this.textBox42.Margin = new System.Windows.Forms.Padding(0);
+            this.textBox42.MaxLength = 1;
+            this.textBox42.Multiline = true;
+            this.textBox42.Name = "textBox42";
+            this.textBox42.Size = new System.Drawing.Size(42, 44);
+            this.textBox42.TabIndex = 8;
+            this.textBox42.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // textBox32
             // 
             this.textBox32.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -1549,86 +1592,6 @@ namespace SudokuSolver
             this.textBox32.Size = new System.Drawing.Size(42, 44);
             this.textBox32.TabIndex = 7;
             this.textBox32.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // textBox30
-            // 
-            this.textBox30.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox30.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox30.Font = new System.Drawing.Font("Microsoft Sans Serif", 26F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox30.Location = new System.Drawing.Point(1, 1);
-            this.textBox30.Margin = new System.Windows.Forms.Padding(0);
-            this.textBox30.MaxLength = 1;
-            this.textBox30.Multiline = true;
-            this.textBox30.Name = "textBox30";
-            this.textBox30.Size = new System.Drawing.Size(42, 42);
-            this.textBox30.TabIndex = 1;
-            this.textBox30.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // textBox40
-            // 
-            this.textBox40.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox40.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox40.Font = new System.Drawing.Font("Microsoft Sans Serif", 26F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox40.Location = new System.Drawing.Point(44, 1);
-            this.textBox40.Margin = new System.Windows.Forms.Padding(0);
-            this.textBox40.MaxLength = 1;
-            this.textBox40.Multiline = true;
-            this.textBox40.Name = "textBox40";
-            this.textBox40.Size = new System.Drawing.Size(42, 42);
-            this.textBox40.TabIndex = 2;
-            this.textBox40.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // textBox50
-            // 
-            this.textBox50.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox50.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox50.Font = new System.Drawing.Font("Microsoft Sans Serif", 26F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox50.Location = new System.Drawing.Point(87, 1);
-            this.textBox50.Margin = new System.Windows.Forms.Padding(0);
-            this.textBox50.MaxLength = 1;
-            this.textBox50.Multiline = true;
-            this.textBox50.Name = "textBox50";
-            this.textBox50.Size = new System.Drawing.Size(44, 42);
-            this.textBox50.TabIndex = 3;
-            this.textBox50.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // textBox31
-            // 
-            this.textBox31.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox31.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox31.Font = new System.Drawing.Font("Microsoft Sans Serif", 26F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox31.Location = new System.Drawing.Point(1, 44);
-            this.textBox31.Margin = new System.Windows.Forms.Padding(0);
-            this.textBox31.MaxLength = 1;
-            this.textBox31.Multiline = true;
-            this.textBox31.Name = "textBox31";
-            this.textBox31.Size = new System.Drawing.Size(42, 42);
-            this.textBox31.TabIndex = 4;
-            this.textBox31.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // textBox41
-            // 
-            this.textBox41.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox41.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox41.Font = new System.Drawing.Font("Microsoft Sans Serif", 26F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox41.Location = new System.Drawing.Point(44, 44);
-            this.textBox41.Margin = new System.Windows.Forms.Padding(0);
-            this.textBox41.MaxLength = 1;
-            this.textBox41.Multiline = true;
-            this.textBox41.Name = "textBox41";
-            this.textBox41.Size = new System.Drawing.Size(42, 42);
-            this.textBox41.TabIndex = 5;
-            this.textBox41.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // textBox51
             // 
@@ -1646,21 +1609,85 @@ namespace SudokuSolver
             this.textBox51.TabIndex = 6;
             this.textBox51.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // textBox42
+            // textBox41
             // 
-            this.textBox42.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.textBox41.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox42.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox42.Font = new System.Drawing.Font("Microsoft Sans Serif", 26F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox42.Location = new System.Drawing.Point(44, 87);
-            this.textBox42.Margin = new System.Windows.Forms.Padding(0);
-            this.textBox42.MaxLength = 1;
-            this.textBox42.Multiline = true;
-            this.textBox42.Name = "textBox42";
-            this.textBox42.Size = new System.Drawing.Size(42, 44);
-            this.textBox42.TabIndex = 8;
-            this.textBox42.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.textBox41.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox41.Font = new System.Drawing.Font("Microsoft Sans Serif", 26F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox41.Location = new System.Drawing.Point(44, 44);
+            this.textBox41.Margin = new System.Windows.Forms.Padding(0);
+            this.textBox41.MaxLength = 1;
+            this.textBox41.Multiline = true;
+            this.textBox41.Name = "textBox41";
+            this.textBox41.Size = new System.Drawing.Size(42, 42);
+            this.textBox41.TabIndex = 5;
+            this.textBox41.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // textBox31
+            // 
+            this.textBox31.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox31.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox31.Font = new System.Drawing.Font("Microsoft Sans Serif", 26F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox31.Location = new System.Drawing.Point(1, 44);
+            this.textBox31.Margin = new System.Windows.Forms.Padding(0);
+            this.textBox31.MaxLength = 1;
+            this.textBox31.Multiline = true;
+            this.textBox31.Name = "textBox31";
+            this.textBox31.Size = new System.Drawing.Size(42, 42);
+            this.textBox31.TabIndex = 4;
+            this.textBox31.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // textBox50
+            // 
+            this.textBox50.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox50.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox50.Font = new System.Drawing.Font("Microsoft Sans Serif", 26F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox50.Location = new System.Drawing.Point(87, 1);
+            this.textBox50.Margin = new System.Windows.Forms.Padding(0);
+            this.textBox50.MaxLength = 1;
+            this.textBox50.Multiline = true;
+            this.textBox50.Name = "textBox50";
+            this.textBox50.Size = new System.Drawing.Size(44, 42);
+            this.textBox50.TabIndex = 3;
+            this.textBox50.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // textBox40
+            // 
+            this.textBox40.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox40.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox40.Font = new System.Drawing.Font("Microsoft Sans Serif", 26F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox40.Location = new System.Drawing.Point(44, 1);
+            this.textBox40.Margin = new System.Windows.Forms.Padding(0);
+            this.textBox40.MaxLength = 1;
+            this.textBox40.Multiline = true;
+            this.textBox40.Name = "textBox40";
+            this.textBox40.Size = new System.Drawing.Size(42, 42);
+            this.textBox40.TabIndex = 2;
+            this.textBox40.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // textBox30
+            // 
+            this.textBox30.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox30.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox30.Font = new System.Drawing.Font("Microsoft Sans Serif", 26F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox30.Location = new System.Drawing.Point(1, 1);
+            this.textBox30.Margin = new System.Windows.Forms.Padding(0);
+            this.textBox30.MaxLength = 1;
+            this.textBox30.Multiline = true;
+            this.textBox30.Name = "textBox30";
+            this.textBox30.Size = new System.Drawing.Size(42, 42);
+            this.textBox30.TabIndex = 1;
+            this.textBox30.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // tableLayoutPanel00
             // 
@@ -1835,141 +1862,39 @@ namespace SudokuSolver
             this.textBox00.TabIndex = 0;
             this.textBox00.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // menuStrip1
-            // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(687, 24);
-            this.menuStrip1.TabIndex = 4;
-            this.menuStrip1.Text = "menuStrip1";
-            // 
-            // fileToolStripMenuItem
-            // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.exitToolStripMenuItem,
-            this.toolStripSeparator2,
-            this.exitToolStripMenuItem1});
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fileToolStripMenuItem.Text = "File";
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
-            this.exitToolStripMenuItem.Text = "Quit Game";
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(131, 6);
-            // 
-            // exitToolStripMenuItem1
-            // 
-            this.exitToolStripMenuItem1.Name = "exitToolStripMenuItem1";
-            this.exitToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(134, 22);
-            this.exitToolStripMenuItem1.Text = "Exit";
-            // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.SystemColors.Control;
-            this.panel1.Controls.Add(this.buttonExit);
-            this.panel1.Controls.Add(this.buttonCustom);
-            this.panel1.Controls.Add(this.button2);
-            this.panel1.Controls.Add(this.button1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(687, 581);
-            this.panel1.TabIndex = 3;
-            // 
-            // buttonExit
-            // 
-            this.buttonExit.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.buttonExit.Location = new System.Drawing.Point(293, 300);
-            this.buttonExit.Name = "buttonExit";
-            this.buttonExit.Size = new System.Drawing.Size(86, 23);
-            this.buttonExit.TabIndex = 3;
-            this.buttonExit.Text = "Exit";
-            this.buttonExit.UseVisualStyleBackColor = true;
-            // 
-            // buttonCustom
-            // 
-            this.buttonCustom.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.buttonCustom.Location = new System.Drawing.Point(293, 271);
-            this.buttonCustom.Name = "buttonCustom";
-            this.buttonCustom.Size = new System.Drawing.Size(86, 23);
-            this.buttonCustom.TabIndex = 2;
-            this.buttonCustom.Text = "Custom Game";
-            this.buttonCustom.UseVisualStyleBackColor = true;
-            // 
-            // button2
-            // 
-            this.button2.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.button2.Location = new System.Drawing.Point(293, 242);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(86, 23);
-            this.button2.TabIndex = 1;
-            this.button2.Text = "Load Game";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            this.button1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.button1.Location = new System.Drawing.Point(293, 213);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(86, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "New Game";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // backgroundSolveWorker
-            // 
-            this.backgroundSolveWorker.WorkerReportsProgress = true;
-            this.backgroundSolveWorker.WorkerSupportsCancellation = true;
-            // 
             // SudokuUIFrame
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(687, 581);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.labelBottom);
             this.Controls.Add(this.labelTitle);
-            this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel2);
-            this.MainMenuStrip = this.menuStrip1;
             this.MinimumSize = new System.Drawing.Size(703, 620);
             this.Name = "SudokuUIFrame";
             this.Text = "Sudoku Solver";
             this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.tableLayoutPanelMain.ResumeLayout(false);
             this.tableLayoutPanel22.ResumeLayout(false);
             this.tableLayoutPanel22.PerformLayout();
-            this.tableLayoutPanel21.ResumeLayout(false);
-            this.tableLayoutPanel21.PerformLayout();
-            this.tableLayoutPanel20.ResumeLayout(false);
-            this.tableLayoutPanel20.PerformLayout();
             this.tableLayoutPanel12.ResumeLayout(false);
             this.tableLayoutPanel12.PerformLayout();
-            this.tableLayoutPanel11.ResumeLayout(false);
-            this.tableLayoutPanel11.PerformLayout();
-            this.tableLayoutPanel10.ResumeLayout(false);
-            this.tableLayoutPanel10.PerformLayout();
             this.tableLayoutPanel02.ResumeLayout(false);
             this.tableLayoutPanel02.PerformLayout();
+            this.tableLayoutPanel21.ResumeLayout(false);
+            this.tableLayoutPanel21.PerformLayout();
+            this.tableLayoutPanel11.ResumeLayout(false);
+            this.tableLayoutPanel11.PerformLayout();
             this.tableLayoutPanel01.ResumeLayout(false);
             this.tableLayoutPanel01.PerformLayout();
+            this.tableLayoutPanel20.ResumeLayout(false);
+            this.tableLayoutPanel20.PerformLayout();
+            this.tableLayoutPanel10.ResumeLayout(false);
+            this.tableLayoutPanel10.PerformLayout();
             this.tableLayoutPanel00.ResumeLayout(false);
             this.tableLayoutPanel00.PerformLayout();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
-            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1977,115 +1902,126 @@ namespace SudokuSolver
         #endregion
 
         private System.Windows.Forms.Label labelTitle;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label labelBottom;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Button buttonFinished;
         private System.Windows.Forms.Label labelFinished;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanelMain;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel22;
-        private System.Windows.Forms.TextBox textBox88;
-        private System.Windows.Forms.TextBox textBox68;
-        private System.Windows.Forms.TextBox textBox66;
-        private System.Windows.Forms.TextBox textBox76;
-        private System.Windows.Forms.TextBox textBox86;
-        private System.Windows.Forms.TextBox textBox67;
-        private System.Windows.Forms.TextBox textBox77;
-        private System.Windows.Forms.TextBox textBox87;
-        private System.Windows.Forms.TextBox textBox78;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel21;
-        private System.Windows.Forms.TextBox textBox58;
-        private System.Windows.Forms.TextBox textBox48;
-        private System.Windows.Forms.TextBox textBox38;
-        private System.Windows.Forms.TextBox textBox36;
-        private System.Windows.Forms.TextBox textBox46;
-        private System.Windows.Forms.TextBox textBox56;
-        private System.Windows.Forms.TextBox textBox37;
-        private System.Windows.Forms.TextBox textBox47;
-        private System.Windows.Forms.TextBox textBox57;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel20;
-        private System.Windows.Forms.TextBox textBox28;
-        private System.Windows.Forms.TextBox textBox08;
-        private System.Windows.Forms.TextBox textBox06;
-        private System.Windows.Forms.TextBox textBox16;
-        private System.Windows.Forms.TextBox textBox26;
-        private System.Windows.Forms.TextBox textBox07;
-        private System.Windows.Forms.TextBox textBox17;
-        private System.Windows.Forms.TextBox textBox27;
-        private System.Windows.Forms.TextBox textBox18;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel12;
-        private System.Windows.Forms.TextBox textBox85;
-        private System.Windows.Forms.TextBox textBox65;
-        private System.Windows.Forms.TextBox textBox63;
-        private System.Windows.Forms.TextBox textBox73;
-        private System.Windows.Forms.TextBox textBox83;
-        private System.Windows.Forms.TextBox textBox64;
-        private System.Windows.Forms.TextBox textBox74;
-        private System.Windows.Forms.TextBox textBox84;
-        private System.Windows.Forms.TextBox textBox75;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel11;
-        private System.Windows.Forms.TextBox textBox55;
-        private System.Windows.Forms.TextBox textBox45;
-        private System.Windows.Forms.TextBox textBox35;
-        private System.Windows.Forms.TextBox textBox33;
-        private System.Windows.Forms.TextBox textBox43;
-        private System.Windows.Forms.TextBox textBox53;
-        private System.Windows.Forms.TextBox textBox34;
-        private System.Windows.Forms.TextBox textBox54;
-        private System.Windows.Forms.TextBox textBox44;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel10;
-        private System.Windows.Forms.TextBox textBox05;
-        private System.Windows.Forms.TextBox textBox03;
-        private System.Windows.Forms.TextBox textBox13;
-        private System.Windows.Forms.TextBox textBox23;
-        private System.Windows.Forms.TextBox textBox04;
-        private System.Windows.Forms.TextBox textBox14;
-        private System.Windows.Forms.TextBox textBox24;
-        private System.Windows.Forms.TextBox textBox15;
-        private System.Windows.Forms.TextBox textBox25;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel02;
-        private System.Windows.Forms.TextBox textBox82;
-        private System.Windows.Forms.TextBox textBox72;
-        private System.Windows.Forms.TextBox textBox62;
-        private System.Windows.Forms.TextBox textBox81;
-        private System.Windows.Forms.TextBox textBox71;
-        private System.Windows.Forms.TextBox textBox61;
-        private System.Windows.Forms.TextBox textBox80;
-        private System.Windows.Forms.TextBox textBox70;
-        private System.Windows.Forms.TextBox textBox60;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel01;
-        private System.Windows.Forms.TextBox textBox52;
-        private System.Windows.Forms.TextBox textBox32;
-        private System.Windows.Forms.TextBox textBox30;
-        private System.Windows.Forms.TextBox textBox40;
-        private System.Windows.Forms.TextBox textBox50;
-        private System.Windows.Forms.TextBox textBox31;
-        private System.Windows.Forms.TextBox textBox41;
-        private System.Windows.Forms.TextBox textBox51;
-        private System.Windows.Forms.TextBox textBox42;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel00;
-        private System.Windows.Forms.TextBox textBox22;
-        private System.Windows.Forms.TextBox textBox12;
-        private System.Windows.Forms.TextBox textBox02;
-        private System.Windows.Forms.TextBox textBox21;
-        private System.Windows.Forms.TextBox textBox11;
-        private System.Windows.Forms.TextBox textBox01;
-        private System.Windows.Forms.TextBox textBox20;
-        private System.Windows.Forms.TextBox textBox10;
-        private System.Windows.Forms.TextBox textBox00;
-        private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button buttonExit;
-        private System.Windows.Forms.Button buttonCustom;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem1;
-        private System.ComponentModel.BackgroundWorker backgroundSolveWorker;
-        private System.ComponentModel.BackgroundWorker backgroundHintWorker;
         private System.Windows.Forms.Button buttonSolve;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanelMain;
 
+        // Box 22 declarations
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel22;
+        private GridTextBox textBox88;
+        private GridTextBox textBox78;
+        private GridTextBox textBox68;
+        private GridTextBox textBox87;
+        private GridTextBox textBox77;
+        private GridTextBox textBox67;
+        private GridTextBox textBox86;
+        private GridTextBox textBox76;
+        private GridTextBox textBox66;
+
+        // Box 12 declarations
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel12;
+        private GridTextBox textBox58;
+        private GridTextBox textBox48;
+        private GridTextBox textBox38;
+        private GridTextBox textBox57;
+        private GridTextBox textBox47;
+        private GridTextBox textBox37;
+        private GridTextBox textBox56;
+        private GridTextBox textBox46;
+        private GridTextBox textBox36;
+
+        // Box 02 declarations
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel02;
+        private GridTextBox textBox28;
+        private GridTextBox textBox18;
+        private GridTextBox textBox08;
+        private GridTextBox textBox27;
+        private GridTextBox textBox17;
+        private GridTextBox textBox07;
+        private GridTextBox textBox26;
+        private GridTextBox textBox16;
+        private GridTextBox textBox06;
+
+        // Box 21 declarations
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel21;
+        private GridTextBox textBox85;
+        private GridTextBox textBox75;
+        private GridTextBox textBox65;
+        private GridTextBox textBox84;
+        private GridTextBox textBox74;
+        private GridTextBox textBox64;
+        private GridTextBox textBox83;
+        private GridTextBox textBox73;
+        private GridTextBox textBox63;
+
+        // Box 11 declarations
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel11;
+        private GridTextBox textBox55;
+        private GridTextBox textBox45;
+        private GridTextBox textBox35;
+        private GridTextBox textBox54;
+        private GridTextBox textBox44;
+        private GridTextBox textBox34;
+        private GridTextBox textBox53;
+        private GridTextBox textBox43;
+        private GridTextBox textBox33;
+
+        // Box 01 declarations
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel01;
+        private GridTextBox textBox25;
+        private GridTextBox textBox15;
+        private GridTextBox textBox05;
+        private GridTextBox textBox24;
+        private GridTextBox textBox14;
+        private GridTextBox textBox04;
+        private GridTextBox textBox23;
+        private GridTextBox textBox13;
+        private GridTextBox textBox03;
+
+        // Box 20 declarations
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel20;
+        private GridTextBox textBox82;
+        private GridTextBox textBox72;
+        private GridTextBox textBox62;
+        private GridTextBox textBox81;
+        private GridTextBox textBox71;
+        private GridTextBox textBox61;
+        private GridTextBox textBox80;
+        private GridTextBox textBox70;
+        private GridTextBox textBox60;
+     
+        // Box 10 declarations
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel10;
+        private GridTextBox textBox52;
+        private GridTextBox textBox42;
+        private GridTextBox textBox32;
+        private GridTextBox textBox51;
+        private GridTextBox textBox41;
+        private GridTextBox textBox31;
+        private GridTextBox textBox50;
+        private GridTextBox textBox40;
+        private GridTextBox textBox30;
+
+        // Box 00 declarations
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel00;
+        private GridTextBox textBox22;
+        private GridTextBox textBox12;
+        private GridTextBox textBox02;
+        private GridTextBox textBox21;
+        private GridTextBox textBox11;
+        private GridTextBox textBox01;
+        private GridTextBox textBox20;
+        private GridTextBox textBox10;
+        private GridTextBox textBox00;
+
+
+        private System.Windows.Forms.Label labelSolveDetails;
+        private System.Windows.Forms.Button buttonBack;
+        private System.Windows.Forms.Button buttonNext;
+        private System.Windows.Forms.Button buttonClear;
     }
 }
