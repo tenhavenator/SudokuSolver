@@ -1,5 +1,5 @@
 ﻿/// <summary>
-/// This file contains the functions and classes used for solving sudokus and generating hints.
+/// This file contains the functions and classes used for solving sudokus.
 /// </summary>
 
 using System;
@@ -65,19 +65,17 @@ namespace SudokuSolver
         /// <param name="pRow">The row value of the square</param>
         /// <param name="pColumn">The column value of the square</param>
         /// <param name="pValue">The value to be put in the square</param>
-        /// <returns></returns>
         public void setKnownValue(int pRow, int pColumn, byte pValue)
         {
             mGrid[pRow, pColumn].setKnownValue(pValue);
         }
 
         /// <summary>
-        /// Check if a value has been found on the board and insert it
+        /// Check if a value has been found on the board and if so insert it
         /// </summary>
         /// <returns>True if a value was found and false if not</returns>
         public Boolean checkForKnownValue()
         {
-            // Check if a value has been found
             foreach (Entity entity in mEntities)
             {
                 // For each possible value in the entity, check if there is only one square where it can be
@@ -100,7 +98,7 @@ namespace SudokuSolver
         /// <summary>
         /// Checks if all squares have been assigned a value.
         /// </summary>
-        /// <returns>Returns true if all square have a been assigned a value </returns>
+        /// <returns>Returns true if all squares have a been assigned a value </returns>
         public Boolean isSolved()
         {
             // Check if the sudoku is solved
@@ -155,7 +153,7 @@ namespace SudokuSolver
 
         /// <summary>
         /// Removes a value from the list of values that can possibly occupy this square. Notifies all listening entities that the
-        /// value cannot go in this square anymore
+        /// value cannot go in this square anymore.
         /// </summary>
         /// <param name="pValue">The value to be removed</param>
         public void eliminatePossibleValue(byte pValue)
@@ -167,7 +165,7 @@ namespace SudokuSolver
         }
 
         /// <summary>
-        /// Sets a value to be in this square. Notifies all listening entities that there is now a value in this square
+        /// Sets a value to be in this square. Notifies all listening entities that there is now a value in this square.
         /// </summary>
         /// <param name="pValue">The value to be placed in this square</param>
         public void setKnownValue(byte pValue)
@@ -220,7 +218,8 @@ namespace SudokuSolver
     }
 
     /// <summary>
-    /// This class represents an entity (row, column, 3x3 box) that must have the all the values 1-9 once and only once.
+    /// This class represents an entity (row, column, 3x3 box) that must have the all the values 1-9 once and only once. The possible 
+    /// squares for each value in the entity are tracked and eliminated one by one.
     /// </summary>
     public class Entity
     { 
@@ -243,6 +242,7 @@ namespace SudokuSolver
         /// possible value has been eliminated
         /// </summary>
         /// <param name="pValue">The value final value entered or the possible value removed from a square</param>
+        /// <param name="pSquare">The square that published the notification</param>
         private void squareNotificationHandler(byte pValue, Square pSquare)
         {
             // The square has been filled
@@ -298,7 +298,7 @@ namespace SudokuSolver
     }
 
     /// <summary>
-    /// This class contains the static methods used to solve sudokus and generate hints
+    /// This class contains the static method used to solve sudokus
     /// </summary>
     public class SudokuSolver
     {
@@ -308,7 +308,7 @@ namespace SudokuSolver
         /// <summary>
         /// Solves a given sudoku. 
         /// </summary>
-        public static SolveResult solve(byte[] pSudokuValues, BackgroundWorker pBackgroundSudokuSolver)
+        public static SolveResult solve(byte[,] pSudokuValues, BackgroundWorker pBackgroundSudokuSolver)
         {
             try
             { 
@@ -316,25 +316,26 @@ namespace SudokuSolver
                 double progress = 0.0;
 
                 // Set initial values
-                for (int i = 0; i < pSudokuValues.Length; i++)
+                for (int row = 0; row < Constants.BOARD_SIZE; row++)
                 {
-                    // Check if operation was cancelled
-                    if (pBackgroundSudokuSolver.CancellationPending)
+                    for (int column = 0; column < Constants.BOARD_SIZE; column++)
                     {
-                        return SolveResult.createCancelledResult();
-                    }
+                        // Check if operation was cancelled
+                        if (pBackgroundSudokuSolver.CancellationPending)
+                        {
+                            return SolveResult.createCancelledResult();
+                        }
 
-                    if (pSudokuValues[i] != 0)
-                    {
-                        // Update progress
-                        progress += VALUE_PERCENT;
-                        pBackgroundSudokuSolver.ReportProgress(Convert.ToInt32(progress));
-                        Thread.Sleep(SLEEP_TIME_MS);
+                        // An intial values has been found and will be entered on the board
+                        if (pSudokuValues[row, column] != 0)
+                        {
+                            // Update progress
+                            progress += VALUE_PERCENT;
+                            pBackgroundSudokuSolver.ReportProgress(Convert.ToInt32(progress));
+                            Thread.Sleep(SLEEP_TIME_MS);
 
-                        int row = i / Constants.BOARD_SIZE;
-                        int column = i % Constants.BOARD_SIZE;
-
-                        board.setKnownValue(row, column, pSudokuValues[i]);
+                            board.setKnownValue(row, column, pSudokuValues[row, column]);
+                        }
                     }
                 }
 
@@ -355,13 +356,13 @@ namespace SudokuSolver
                     // Check if the sudoku is solved
                     if (board.isSolved())
                     {
-                        byte[] solvedValues = new byte[81];
-                        for (int i = 0; i < pSudokuValues.Length; i++)
+                        byte[,] solvedValues = new byte[Constants.BOARD_SIZE,Constants.BOARD_SIZE];
+                        for (int row = 0; row < Constants.BOARD_SIZE; row++)
                         {
-                            int row = i / Constants.BOARD_SIZE;
-                            int column = i % Constants.BOARD_SIZE;
-
-                            solvedValues[i] = board.Grid[row, column].Value;
+                            for (int column = 0; column < Constants.BOARD_SIZE; column++)
+                            {
+                                solvedValues[row, column] = board.Grid[row, column].Value;
+                            }
                         }
 
                         return SolveResult.createSuccessResult(solvedValues);
@@ -518,8 +519,8 @@ namespace SudokuSolver
 
                     // #############################################################################################################
                     // Dual Enitity Shadow Technique
-                    // - If two entities have only two possible squares for a value and those possible squares an the same two columns
-                    //   or the same two rows, then those two rows or columns cannot have that value anywhere else except in the squares
+                    // - If two entities have only two possible squares for a value and those possible squares are in the same two columns
+                    //   or the same two rows, then those two rows or columns cannot have that value anywhere else except in those squares
                     // #############################################################################################################
                     foreach (Entity entityA in board.Entities)
                     {

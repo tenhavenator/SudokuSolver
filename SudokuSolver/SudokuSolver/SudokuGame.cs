@@ -1,8 +1,4 @@
-﻿/// <summary>
-/// This class represents a Sudoku game
-/// </summary>
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,58 +6,73 @@ using System.Threading.Tasks;
 
 namespace SudokuSolver
 {
+    /// <summary>
+    /// This class represents a Sudoku game
+    /// </summary>
     public class SudokuGame
     {
-        private byte[] mSudokuGivenValues;
-        private byte[] mSudokuEnteredValues;
-        private byte[] mSudokuSolvedValues;
-        private Boolean mSaved;
+        private byte[,] mSudokuGivenValues;
+        private byte[,] mSudokuEnteredValues;
+        private byte[,] mSudokuSolvedValues;
         
         /// <summary>
         /// Creates a new game
         /// </summary>
         /// <param name="pSudokuGivenValues">The given values for the game</param>
         /// <param name="pSudokuSolvedValues">The solution to the game</param>
-        public SudokuGame(byte[] pSudokuGivenValues, byte[] pSudokuSolvedValues) 
+        public SudokuGame(byte[,] pSudokuGivenValues, byte[,] pSudokuSolvedValues) 
         {
             mSudokuGivenValues = pSudokuGivenValues;
             mSudokuEnteredValues = pSudokuGivenValues;
             mSudokuSolvedValues = pSudokuSolvedValues;
-            mSaved = false;
         }
 
         /// <summary>
-        /// Returns true if the game has been saved since the last square changed
+        /// Solves all values in the sudoku
         /// </summary>
-        public Boolean isSaved()
+        public void solveAllValues()
         {
-            return mSaved;
+            mSudokuEnteredValues = mSudokuSolvedValues;
         }
 
         /// <summary>
-        /// Saves the current game by writing it to a save file. Returns true if the game is saved successfully. TODO Make this actually write to a file.
+        /// Solves the next value in the sudoku
         /// </summary>
-        /// <returns></returns>
-        public Boolean save() 
+        public void solveOneValue()
         {
-            mSaved = true;
-            return true;
+            
         }
 
         /// <summary>
-        /// Sets a value in the sudoku
+        /// Removes the last solved value from the sudoku
         /// </summary>
-        /// <param name="pIndex">The index of the square to set</param>
-        /// <param name="pValue">The value of the square to set</param>
-        public void setValue(int pIndex, byte pValue) 
+        public void unsolveOneValue()
         {
-            mSudokuEnteredValues[pIndex] = pValue;
-            mSaved = false;
+        
         }
 
-        public byte[] SolvedValues
+        /// <summary>
+        /// Property to access the solved sudoku values
+        /// </summary>
+        public byte[,] SolvedValues
         {
             get { return mSudokuSolvedValues; }
+        }
+
+        /// <summary>
+        /// Property to access the given values of the sudoku
+        /// </summary>
+        public byte[,] GivenValues
+        {
+            get { return mSudokuGivenValues; }
+        }
+
+        /// <summary>
+        /// Property to access the sudoku values that are on the board right now
+        /// </summary>
+        public byte[,] EnteredValues
+        {
+            get { return mSudokuEnteredValues; }
         }
     }
 }
