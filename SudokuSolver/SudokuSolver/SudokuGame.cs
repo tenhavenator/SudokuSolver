@@ -1,8 +1,4 @@
-﻿/// <summary>
-/// This class represents a Sudoku game
-/// </summary>
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,12 +6,14 @@ using System.Threading.Tasks;
 
 namespace SudokuSolver
 {
+    /// <summary>
+    /// This class represents a Sudoku game
+    /// </summary>
     public class SudokuGame
     {
         private byte[,] mSudokuGivenValues;
         private byte[,] mSudokuEnteredValues;
         private byte[,] mSudokuSolvedValues;
-        private Boolean mSaved;
         
         /// <summary>
         /// Creates a new game
@@ -27,35 +25,54 @@ namespace SudokuSolver
             mSudokuGivenValues = pSudokuGivenValues;
             mSudokuEnteredValues = pSudokuGivenValues;
             mSudokuSolvedValues = pSudokuSolvedValues;
-            mSaved = false;
         }
 
         /// <summary>
-        /// Returns true if the game has been saved since the last square changed
+        /// Solves all values in the sudoku
         /// </summary>
-        public Boolean isSaved()
+        public void solveAllValues()
         {
-            return mSaved;
+            mSudokuEnteredValues = mSudokuSolvedValues;
         }
 
         /// <summary>
-        /// Saves the current game by writing it to a save file. Returns true if the game is saved successfully. TODO Make this actually write to a file.
+        /// Solves the next value in the sudoku
         /// </summary>
-        /// <returns></returns>
-        public Boolean save() 
+        public void solveOneValue()
         {
-            mSaved = true;
-            return true;
+            
         }
 
+        /// <summary>
+        /// Removes the last solved value from the sudoku
+        /// </summary>
+        public void unsolveOneValue()
+        {
+        
+        }
+
+        /// <summary>
+        /// Property to access the solved sudoku values
+        /// </summary>
         public byte[,] SolvedValues
         {
             get { return mSudokuSolvedValues; }
         }
 
+        /// <summary>
+        /// Property to access the given values of the sudoku
+        /// </summary>
         public byte[,] GivenValues
         {
             get { return mSudokuGivenValues; }
+        }
+
+        /// <summary>
+        /// Property to access the sudoku values that are on the board right now
+        /// </summary>
+        public byte[,] EnteredValues
+        {
+            get { return mSudokuEnteredValues; }
         }
     }
 }

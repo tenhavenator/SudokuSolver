@@ -1,6 +1,6 @@
 ﻿namespace SudokuSolver
 {
-    partial class BackgroundWorkerFrame
+    partial class BackgroundSolveWorkerFrame
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,7 @@
         {
             this.buttonCancel = new System.Windows.Forms.Button();
             this.progressBar = new System.Windows.Forms.ProgressBar();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lablelProgress = new System.Windows.Forms.Label();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.SuspendLayout();
             // 
@@ -52,28 +52,29 @@
             this.progressBar.Size = new System.Drawing.Size(282, 25);
             this.progressBar.TabIndex = 1;
             // 
-            // label1
+            // lablelProgress
             // 
-            this.label1.Location = new System.Drawing.Point(69, 19);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(171, 23);
-            this.label1.TabIndex = 2;
+            this.lablelProgress.Location = new System.Drawing.Point(69, 19);
+            this.lablelProgress.Name = "lablelProgress";
+            this.lablelProgress.Size = new System.Drawing.Size(171, 23);
+            this.lablelProgress.TabIndex = 2;
+            this.lablelProgress.Text = "Loading and checking sudoku...";
             // 
             // backgroundWorker
             // 
             this.backgroundWorker.WorkerReportsProgress = true;
             this.backgroundWorker.WorkerSupportsCancellation = true;
             // 
-            // ProgressFrame
+            // BackgroundWorkerFrame
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(306, 116);
             this.ControlBox = false;
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lablelProgress);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.buttonCancel);
-            this.Name = "ProgressFrame";
+            this.Name = "BackgroundWorkerFrame";
             this.Text = "Progress";
             this.ResumeLayout(false);
 
@@ -83,7 +84,7 @@
 
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.ProgressBar progressBar;
-        protected System.Windows.Forms.Label label1;
+        protected System.Windows.Forms.Label lablelProgress;
         protected System.ComponentModel.BackgroundWorker backgroundWorker;
     }
 }

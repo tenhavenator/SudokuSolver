@@ -1,8 +1,4 @@
-﻿/// <summary>
-/// This class contains the actions related to UI interaction
-/// </summary>
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,9 +10,11 @@ using System.Windows.Forms;
 
 namespace SudokuSolver
 {
+    /// <summary>
+    /// This class contains the actions related to UI interaction on the main screen
+    /// </summary>
     public partial class SudokuUIFrame : Form
     {
-
         private TextBox[,] mSudokuTextBoxGrid;
         private SudokuGame mSudokuGame;
 
@@ -30,19 +28,16 @@ namespace SudokuSolver
 
             this.buttonFinished.Click += new EventHandler(this.buttonFinished_Click);
             this.buttonSolve.Click += new EventHandler(this.buttonSolve_Click);
+            this.buttonClear.Click += new EventHandler(this.buttonClear_Click);
 
         }
 
         #region TextBoxRegion definition
 
         /// <summary>
-        /// Sets up all text boxes in the sudoku grid
+        /// Sets up all text boxes in the sudoku grid. Adds all text boxes in the sudoku grid to an array of text
+        /// boxes for ease of reference. Adds a listener to each textbox for the various events that will be captured.
         /// </summary>
-        /// <remarks> 
-        /// Adds all text boxes in the sudoku grid to an array of text boxes for ease of reference.
-        /// Adds a listener to each textbox for a "text changed" event
-        /// </remarks>
-        /// 
         private void InitializeTextBoxes()
         {
             mSudokuTextBoxGrid = new TextBox[Constants.BOARD_SIZE, Constants.BOARD_SIZE];
@@ -140,16 +135,33 @@ namespace SudokuSolver
             {
                 for (int column = 0; column < Constants.BOARD_SIZE; column++)
                 {
+                    // New variables need to be declared because the variables in the for loop will be part of the 
+                    // closures defined below and will be changed with each loop iteration
+                    int rowClosure = row;
+                    int columnClosure = column;
+
+                    // Add event handlers
                     mSudokuTextBoxGrid[row, column].TextChanged += new EventHandler(this.textBox_Changed);
-                    mSudokuTextBoxGrid[row, column].MouseMove += new MouseEventHandler(this.textBox_MouseOver);
-                    mSudokuTextBoxGrid[row, column].MouseLeave += new EventHandler(this.textBox_MouseLeave);
                     mSudokuTextBoxGrid[row, column].MouseDown += new MouseEventHandler(this.textBox_MouseDown);
+
+                    mSudokuTextBoxGrid[row, column].MouseMove += (sender, eventArgs) =>
+                    {
+                        textBox_MouseOver(sender, rowClosure, columnClosure);
+                    };
+                    
+                    mSudokuTextBoxGrid[row, column].MouseLeave += (sender, eventArgs) =>
+                    {
+                        textBox_MouseLeave(sender, rowClosure, columnClosure);
+                    };
                 }
             }
-              
-            
         }
 
+        /// <summary>
+        /// Handler for text box "mouse down" event (when the mouse is over the text box and the mouse button has been pressed). 
+        /// Hides the flashing cursor if a sudoku has already been entered.
+        /// </summary>
+        /// <param name="pSender">Textbox that was clicked</param>
         private void  textBox_MouseDown(object pSender, EventArgs _pArgs)
         {
             if (mSudokuGame != null)
@@ -160,13 +172,10 @@ namespace SudokuSolver
         }
 
         /// <summary>
-        /// Funtction called any time a textbox in the sudoku grid is changed
+        /// Handler for the text box "text changed" event (when the text in the box is changed). Filters out any invalid input
+        /// entered into the sudoku grid. Invalid input is anything that is not an integer between 1 and 9
         /// </summary>
-        /// <param name="pSender"> Textbox that changed</param>
-        /// <remarks> This function filters out any invalid input entered into the sudoku grid.
-        /// Invalid input is anything that is not an integer between 1 and 9
-        /// </remarks>
-        /// 
+        /// <param name="pSender"> Textbox that was changed</param>
         private void textBox_Changed(object pSender, EventArgs _pArgs)
         {
             TextBox textBox = pSender as TextBox;
@@ -184,12 +193,19 @@ namespace SudokuSolver
             }
         }
 
-        private void textBox_MouseOver(object pSender,  EventArgs _pArgs)
+        /// <summary>
+        /// Handler for the text box "mouse over" event (when the mouse moves over a textbox). If there is current sudoku and the
+        /// textbox has a value, then it is colored green to indicate it is clickable. Otherwise it is colored red.
+        /// </summary>
+        /// <param name="pSender"> The textbox that the mouse moved over</param>
+        /// <param name="pRow">The row of the textbox</param>
+        /// <param name="pColumn">The column of the textbox</param>
+        private void textBox_MouseOver(object pSender, int pRow, int pColumn)
         {
             if (mSudokuGame != null)
             {
                 TextBox textBox = pSender as TextBox;
-                if (textBox.Text != "")
+                if (mSudokuGame.EnteredValues[pRow, pColumn] != 0)
                 {
                     textBox.BackColor = Color.LightGreen;
                 }
@@ -202,12 +218,19 @@ namespace SudokuSolver
             }
         }
 
-        private void textBox_MouseLeave(object pSender, EventArgs _pArgs)
+        /// <summary>
+        /// Handler of for the text box "mouse leave" event (when the mouse moves off of a textbox). Changes the color of 
+        /// the text box back to its original color
+        /// </summary>
+        /// <param name="pSender">The text box that the mouse has left </param>
+        /// <param name="pRow">The row of the textbox</param>
+        /// <param name="pColumn">The column of the textbox</param>
+        private void textBox_MouseLeave(object pSender, int pRow, int pColumn)
         {
             if (mSudokuGame != null)
             {
-                GridTextBox textBox = pSender as GridTextBox;
-                if (mSudokuGame.GivenValues[textBox.Row, textBox.Column] == 0)
+                TextBox textBox = pSender as TextBox;
+                if (mSudokuGame.GivenValues[pRow, pColumn] == 0)
                 {
                     textBox.BackColor = Color.White;
                 }
@@ -221,14 +244,13 @@ namespace SudokuSolver
         #endregion 
         
         /// <summary>
-        /// The action taken when the solve is press on the game screen.
+        /// The handler for the solve button click event. Displays all values of the solved sudoku.
         /// </summary>
-        public void buttonSolve_Click(object sender, EventArgs e)
+        private void buttonSolve_Click(object sender, EventArgs e)
         {
             DialogResult result =  MessageBox.Show("Are you sure you want to solve the sudoku?", "Solve Sudoku", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
             if (result == DialogResult.OK)
             {
-
                 for (int row = 0; row < Constants.BOARD_SIZE; row++)
                 {
                     for (int column = 0; column < Constants.BOARD_SIZE; column++)
@@ -240,13 +262,15 @@ namespace SudokuSolver
         }
 
         /// <summary>
-        /// The action taken when the "Finished" button is pressed from the custom game screen.
+        /// The handler for the finished button click event. Grabs the values from the text box grid and sends them to the solver.
+        /// If the values were a valid sudoku then the text box grid is set to read only, the solving buttons are displayed, and 
+        /// the current sudoku game is set.
         /// </summary>
         public void buttonFinished_Click(object sender, EventArgs e)
         {
             byte[,] sudokuValues = new byte[Constants.BOARD_SIZE, Constants.BOARD_SIZE];
 
-
+            // Grab the values from the text box
             for (int row = 0; row < Constants.BOARD_SIZE; row++)
             {
                 for (int column = 0; column < Constants.BOARD_SIZE; column++)
@@ -277,7 +301,6 @@ namespace SudokuSolver
                     buttonSolve.Visible = true;
                     buttonNext.Visible = true;
                     buttonBack.Visible = true;
-                    buttonClear.Visible = true;
 
                     mSudokuGame = new SudokuGame(sudokuValues, result.SolveResultValues);
 
@@ -315,28 +338,38 @@ namespace SudokuSolver
                     break;
             }
         }
-    }
 
-    public class GridTextBox : TextBox
-    {
-        private int mRow;
-        private int mColumn;
-
-        public GridTextBox(int pRow, int pColumn)
+        /// <summary>
+        /// Handler for the clear button click event. Hides the solving buttons, clears all text boxes and sets them to mutable, 
+        /// nullifies the current sudoku game.
+        /// </summary>
+        public void buttonClear_Click(object sender, EventArgs e)
         {
-            mRow = pRow;
-            mColumn = pColumn;
-        }
+            DialogResult result = MessageBox.Show("Are you sure you want to clear the board?", "Clear Board", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+            if (result == DialogResult.OK)
+            {
+                for (int row = 0; row < Constants.BOARD_SIZE; row++)
+                {
+                    for (int column = 0; column < Constants.BOARD_SIZE; column++)
+                    {
+                        mSudokuTextBoxGrid[row, column].ReadOnly = false;
+                        mSudokuTextBoxGrid[row, column].Clear();
+                    }
+                }
 
-        public int Row
-        {
-            get { return mRow; }
-        }
+                if (mSudokuGame != null)
+                {
+                    labelFinished.Visible = true;
+                    buttonFinished.Visible = true;
 
-        public int Column
-        {
-            get { return mColumn; }
+                    labelSolveDetails.Visible = false;
+                    buttonSolve.Visible = false;
+                    buttonNext.Visible = false;
+                    buttonBack.Visible = false;
+
+                    mSudokuGame = null;
+                }
+            }
         }
-    
     }
 }
