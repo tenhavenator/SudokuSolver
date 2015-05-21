@@ -19,10 +19,12 @@ namespace SudokuSolver
     { 
         private Square[,] mGrid;
         private List<Entity> mEntities;
+        private int mFoundValues;
 
         public Board()
         {
             mEntities = new List<Entity>();
+            mFoundValues = 0;
 
             // Initialize the grid of squares
             mGrid = new Square[Constants.BOARD_SIZE, Constants.BOARD_SIZE];
@@ -59,15 +61,20 @@ namespace SudokuSolver
             }
         }
 
+        public void setGivenValue(int pRow, int pColumn, byte pValue)
+        {
+            mGrid[pRow, pColumn].setFoundValue(pValue);
+        }
+
         /// <summary>
         /// Enters a known value into a square on the board
         /// </summary>
         /// <param name="pRow">The row value of the square</param>
         /// <param name="pColumn">The column value of the square</param>
         /// <param name="pValue">The value to be put in the square</param>
-        public void setKnownValue(int pRow, int pColumn, byte pValue)
+        public void setFoundValue(int pRow, int pColumn, byte pValue)
         {
-            mGrid[pRow, pColumn].setKnownValue(pValue);
+            mGrid[pRow, pColumn].setFoundValue(pValue, ++mFoundValues);
         }
 
         /// <summary>
@@ -86,7 +93,7 @@ namespace SudokuSolver
                     // Add value to the board if it has been found. 
                     if (candidateSquares.Count == 1)
                     {
-                        setKnownValue(candidateSquares[0].Row, candidateSquares[0].Column, value);
+                        setFoundValue(candidateSquares[0].Row, candidateSquares[0].Column, value);
                         return true;
                     }
                 }
@@ -142,6 +149,7 @@ namespace SudokuSolver
         private int mColumn;
         private byte mFinalValue;
         private List<Action<byte, Square>> mEntityNotifiers;
+        private int mOrderSolved;
 
         public Square(int pRow, int pColumn)
         {
@@ -149,6 +157,7 @@ namespace SudokuSolver
             mColumn = pColumn;
             mFinalValue = 0;
             mEntityNotifiers = new List<Action<byte, Square>>();
+            mOrderSolved = 0;
         }
 
         /// <summary>
@@ -165,10 +174,22 @@ namespace SudokuSolver
         }
 
         /// <summary>
+        /// Sets a value to be in this square. Sets the order in which the value was found. Notifies all listening
+        /// entities that there is now a value in this square.
+        /// </summary>
+        /// <param name="pValue">The value to be placed in this square</param>
+        /// <param name="pOrderSolved">The order in which the values was found</param>
+        public void setFoundValue(byte pValue, int pOrderSolved)
+        {
+            mOrderSolved = pOrderSolved;
+            setFoundValue(pValue);
+        }
+
+        /// <summary>
         /// Sets a value to be in this square. Notifies all listening entities that there is now a value in this square.
         /// </summary>
         /// <param name="pValue">The value to be placed in this square</param>
-        public void setKnownValue(byte pValue)
+        public void setFoundValue(byte pValue)
         {
             mFinalValue = pValue;
             mEntityNotifiers.ForEach(notifier => notifier(pValue, this));
@@ -226,12 +247,14 @@ namespace SudokuSolver
         private List<Square> mSquares;
         private List<byte> mMissingValues;
         private Dictionary<byte, List<Square>> mCandidateSquares;
+        private Dictionary<byte, List<Tuple<Square, SolvingTechnique>>> mEliminatedSquares;
 
         public Entity(List<Square> pSquares)
         {
             mSquares = pSquares;
             mMissingValues = new List<byte>() {1,2,3,4,5,6,7,8,9};
             mCandidateSquares = new Dictionary<byte, List<Square>>();
+            mEliminatedSquares = new Dictionary<byte, List<Tuple<Square, SolvingTechnique>>>();
 
             mSquares.ForEach(square => square.addEntityNotifier(this.squareNotificationHandler));
             mMissingValues.ForEach(value => mCandidateSquares.Add(value, new List<Square>(mSquares)));
@@ -245,23 +268,26 @@ namespace SudokuSolver
         /// <param name="pSquare">The square that published the notification</param>
         private void squareNotificationHandler(byte pValue, Square pSquare)
         {
-            // The square has been filled
-            if (pSquare.isFilled())
+            if (mMissingValues.Contains(pValue))
             {
-                mCandidateSquares.Remove(pValue);
-                mMissingValues.Remove(pValue);
-                mMissingValues.ForEach(value => mCandidateSquares[value].Remove(pSquare));
-                mSquares.ForEach(square => square.eliminatePossibleValue(pValue));
- 
-            }
-            // A possible value has been eliminated from the square
-            else 
-            {
-                if (mCandidateSquares.ContainsKey(pValue))
+                // The square has been filled
+                if (pSquare.isFilled())
                 {
-                    mCandidateSquares[pValue].Remove(pSquare);
+                    mCandidateSquares.Remove(pValue);
+                    mMissingValues.Remove(pValue);
+                    mMissingValues.ForEach(value => mCandidateSquares[value].Remove(pSquare));
+                    mSquares.ForEach(square => square.eliminatePossibleValue(pValue));
+                }
+                // A possible value has been eliminated from the square
+                else
+                {
+                    if (mCandidateSquares.ContainsKey(pValue))
+                    {
+                        mCandidateSquares[pValue].Remove(pSquare);
+                    }
                 }
             }
+          
         }
 
         /// <summary>
@@ -296,6 +322,9 @@ namespace SudokuSolver
             get { return mSquares; }
         }
     }
+
+
+
 
     /// <summary>
     /// This class contains the static method used to solve sudokus
@@ -334,7 +363,7 @@ namespace SudokuSolver
                             pBackgroundSudokuSolver.ReportProgress(Convert.ToInt32(progress));
                             Thread.Sleep(SLEEP_TIME_MS);
 
-                            board.setKnownValue(row, column, pSudokuValues[row, column]);
+                            board.setGivenValue(row, column, pSudokuValues[row, column]);
                         }
                     }
                 }
@@ -397,7 +426,7 @@ namespace SudokuSolver
                             // If only one value can go in this square, then insert that value into the square
                             if (possibleValues.Count == 1)
                             {
-                                board.setKnownValue(square.Row, square.Column, possibleValues[0]);
+                                board.setFoundValue(square.Row, square.Column, possibleValues[0]);
                                 valueFound = true;
                             }
 

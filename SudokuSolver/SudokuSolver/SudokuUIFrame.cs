@@ -205,13 +205,16 @@ namespace SudokuSolver
             if (mSudokuGame != null)
             {
                 TextBox textBox = pSender as TextBox;
-                if (mSudokuGame.EnteredValues[pRow, pColumn] != 0)
+                if (mSudokuGame.GivenValues[pRow, pColumn] == 0)
                 {
-                    textBox.BackColor = Color.LightGreen;
-                }
-                else
-                {
-                    textBox.BackColor = Color.LightSalmon;
+                    if (mSudokuGame.EnteredValues[pRow, pColumn] != 0)
+                    {
+                        textBox.BackColor = Color.LightGreen;
+                    }
+                    else
+                    {
+                        textBox.BackColor = Color.LightSalmon;
+                    }
                 }
 
                 textBox.Cursor = Cursors.Arrow;
@@ -234,31 +237,62 @@ namespace SudokuSolver
                 {
                     textBox.BackColor = Color.White;
                 }
-                else 
-                {
-                    textBox.BackColor = Color.LightGray;
-                }
             }
         }
 
         #endregion 
         
         /// <summary>
+        /// Refreshes the grid of text boxes. Values are based on the currently active sudoku
+        /// </summary>
+        private void refreshTextBoxGrid()
+        {
+            Boolean gameActive = mSudokuGame != null;
+
+            for (int row = 0; row < Constants.BOARD_SIZE; row++)
+            {
+                for (int column = 0; column < Constants.BOARD_SIZE; column++)
+                {
+                    TextBox textBox = mSudokuTextBoxGrid[row, column];
+
+                    if (gameActive)
+                    {
+                        if (mSudokuGame.EnteredValues[row, column] != 0)
+                        {
+                            textBox.Text = Convert.ToString(mSudokuGame.EnteredValues[row, column]);
+                        }
+                        else 
+                        {
+                            textBox.Clear();
+                        }
+                        
+                        textBox.ReadOnly = true;
+                        if (mSudokuGame.GivenValues[row, column] == 0)
+                        {
+                            textBox.BackColor = Color.White;
+                        }
+                        else
+                        {
+                            textBox.BackColor = Color.LightGray;
+                        }
+                    }
+                    else 
+                    {
+                        textBox.Clear();
+                        textBox.ReadOnly = false;
+                        textBox.BackColor = Color.White;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// The handler for the solve button click event. Displays all values of the solved sudoku.
         /// </summary>
         private void buttonSolve_Click(object sender, EventArgs e)
         {
-            DialogResult result =  MessageBox.Show("Are you sure you want to solve the sudoku?", "Solve Sudoku", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
-            if (result == DialogResult.OK)
-            {
-                for (int row = 0; row < Constants.BOARD_SIZE; row++)
-                {
-                    for (int column = 0; column < Constants.BOARD_SIZE; column++)
-                    {
-                        mSudokuTextBoxGrid[row, column].Text = Convert.ToString(mSudokuGame.SolvedValues[row, column]);
-                    }
-                }
-            }
+            mSudokuGame.solveAllValues();
+            refreshTextBoxGrid();
         }
 
         /// <summary>
@@ -303,22 +337,7 @@ namespace SudokuSolver
                     buttonBack.Visible = true;
 
                     mSudokuGame = new SudokuGame(sudokuValues, result.SolveResultValues);
-
-                    for (int row = 0; row < Constants.BOARD_SIZE; row++)
-                    {
-                        for (int column = 0; column < Constants.BOARD_SIZE; column++)
-                        {
-                            mSudokuTextBoxGrid[row, column].ReadOnly = true;
-                            if (mSudokuGame.GivenValues[row, column] != 0)
-                            {
-                                mSudokuTextBoxGrid[row, column].BackColor = Color.LightGray;
-                            }
-                            else
-                            {
-                                mSudokuTextBoxGrid[row, column].BackColor = Color.White;
-                            }
-                        }
-                    }
+                    refreshTextBoxGrid();
 
                     break;
 
@@ -348,15 +367,6 @@ namespace SudokuSolver
             DialogResult result = MessageBox.Show("Are you sure you want to clear the board?", "Clear Board", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
             if (result == DialogResult.OK)
             {
-                for (int row = 0; row < Constants.BOARD_SIZE; row++)
-                {
-                    for (int column = 0; column < Constants.BOARD_SIZE; column++)
-                    {
-                        mSudokuTextBoxGrid[row, column].ReadOnly = false;
-                        mSudokuTextBoxGrid[row, column].Clear();
-                    }
-                }
-
                 if (mSudokuGame != null)
                 {
                     labelFinished.Visible = true;
@@ -369,6 +379,8 @@ namespace SudokuSolver
 
                     mSudokuGame = null;
                 }
+
+                refreshTextBoxGrid();
             }
         }
     }
