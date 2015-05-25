@@ -52,6 +52,7 @@
     </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="SolveResult.cs" />
+    <Compile Include="SolvingTechnique.cs" />
     <Compile Include="SudokuGame.cs" />
     <Compile Include="SudokuSolver.cs" />
     <Compile Include="SudokuUIFrame.cs">
