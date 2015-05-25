@@ -29,6 +29,8 @@ namespace SudokuSolver
             this.buttonFinished.Click += new EventHandler(this.buttonFinished_Click);
             this.buttonSolve.Click += new EventHandler(this.buttonSolve_Click);
             this.buttonClear.Click += new EventHandler(this.buttonClear_Click);
+            this.buttonNext.Click += new EventHandler(this.buttonNext_Click);
+            this.buttonBack.Click += new EventHandler(this.buttonBack_Click);
 
         }
 
@@ -336,7 +338,7 @@ namespace SudokuSolver
                     buttonNext.Visible = true;
                     buttonBack.Visible = true;
 
-                    mSudokuGame = new SudokuGame(sudokuValues, result.SolveResultValues);
+                    mSudokuGame = new SudokuGame(sudokuValues, result.SolveResultGrid);
                     refreshTextBoxGrid();
 
                     break;
@@ -382,6 +384,26 @@ namespace SudokuSolver
 
                 refreshTextBoxGrid();
             }
+        }
+
+        /// <summary>
+        /// Hander for the next button click event. Adds one value to the current sudoku
+        /// </summary>
+        private void buttonNext_Click(object sender, EventArgs e)
+        {
+            mSudokuGame.solveOneValue();
+            refreshTextBoxGrid();
+        }
+
+        /// <summary>
+        /// Handler for the back button click event. Removes one value from the current sudoku
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonBack_Click(object sender, EventArgs e)
+        {
+            mSudokuGame.unsolveOneValue();
+            refreshTextBoxGrid();
         }
     }
 }
