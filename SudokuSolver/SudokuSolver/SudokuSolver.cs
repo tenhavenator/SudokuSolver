@@ -46,18 +46,18 @@ namespace SudokuSolver
                 int boxStartColumn = boxColumn * Constants.BOX_SIZE;
 
                 // Create a new box that contains the correct squares
-                mEntities.Add(new Box(new List<Square>() { 
+                mEntities.Add(new Entity(new List<Square>() { 
                     mGrid[boxStartRow, boxStartColumn], mGrid[boxStartRow, boxStartColumn + 1], mGrid[boxStartRow, boxStartColumn + 2],
                     mGrid[boxStartRow + 1, boxStartColumn], mGrid[boxStartRow + 1, boxStartColumn + 1], mGrid[boxStartRow + 1, boxStartColumn + 2],
-                    mGrid[boxStartRow + 2, boxStartColumn], mGrid[boxStartRow + 2, boxStartColumn + 1], mGrid[boxStartRow + 2, boxStartColumn + 2]}));
+                    mGrid[boxStartRow + 2, boxStartColumn], mGrid[boxStartRow + 2, boxStartColumn + 1], mGrid[boxStartRow + 2, boxStartColumn + 2]}, "Box"));
 
                 // Create a column that contains the correct squares
-                 mEntities.Add(new Column(new List<Square>() { 
-                    mGrid[0,i], mGrid[1,i], mGrid[2,i], mGrid[3,i], mGrid[4,i], mGrid[5,i], mGrid[6,i], mGrid[7,i], mGrid[8,i]}));
+                mEntities.Add(new Entity(new List<Square>() { 
+                    mGrid[0,i], mGrid[1,i], mGrid[2,i], mGrid[3,i], mGrid[4,i], mGrid[5,i], mGrid[6,i], mGrid[7,i], mGrid[8,i]}, "Column"));
 
                 // Create a row that contains the correct squares
-                 mEntities.Add(new Row(new List<Square>() { 
-                    mGrid[i,0], mGrid[i,1], mGrid[i,2], mGrid[i,3], mGrid[i,4], mGrid[i,5], mGrid[i,6], mGrid[i,7], mGrid[i,8]}));
+                mEntities.Add(new Entity(new List<Square>() { 
+                    mGrid[i,0], mGrid[i,1], mGrid[i,2], mGrid[i,3], mGrid[i,4], mGrid[i,5], mGrid[i,6], mGrid[i,7], mGrid[i,8]}, "Row"));
             }
 
             // Insert the initial values
@@ -101,19 +101,32 @@ namespace SudokuSolver
             {
                 pSquare.setValue(pValue, ++mFoundValues, pTechnique);
 
+                // Eliminate all other values from this square
+                OccupiedEliminationTechnique occupiedTechnique = new OccupiedEliminationTechnique(pSquare);
+                for (byte value = 1; value <= Constants.BOARD_SIZE; value++)
+                {
+                    pSquare.eliminatePossibleValue(value, occupiedTechnique, mFoundValues);
+                }
+
                 int boxStartRow = (pSquare.Row / Constants.BOX_SIZE) * Constants.BOX_SIZE;
                 int boxStartColumn = (pSquare.Column / Constants.BOX_SIZE) * Constants.BOX_SIZE;
 
+                BoxEliminationTechnique boxElimination = new BoxEliminationTechnique(pSquare);
+                RowEliminationTechnique rowElimination = new RowEliminationTechnique(pSquare);
+                ColumnEliminationTechnique columnElimination = new ColumnEliminationTechnique(pSquare);
+
+                // Eliminate the values in the box first
                 for (int i = 0; i < Constants.BOARD_SIZE; i++)
                 {
-                    mGrid[boxStartRow + (i / Constants.BOX_SIZE), boxStartColumn + (i % Constants.BOX_SIZE)].eliminatePossibleValue(pValue, pTechnique);
-                    mGrid[pSquare.Row, i].eliminatePossibleValue(pValue, pTechnique);
-                    mGrid[i, pSquare.Column].eliminatePossibleValue(pValue, pTechnique);
+                    mGrid[boxStartRow + (i / Constants.BOX_SIZE), boxStartColumn + (i % Constants.BOX_SIZE)].eliminatePossibleValue(pValue, boxElimination, mFoundValues);
                 }
 
-                foreach (byte value in new List<byte>(pSquare.PossibleValues))
+                // Eliminate the values in the rows and columns
+                for (int i = 0; i < Constants.BOARD_SIZE; i++)
                 {
-                    pSquare.eliminatePossibleValue(value, new SquareOccupiedTechnique());
+                    mGrid[pSquare.Row, i].eliminatePossibleValue(pValue, rowElimination, mFoundValues);
+
+                    mGrid[i, pSquare.Column].eliminatePossibleValue(pValue, columnElimination, mFoundValues);
                 }
             }
         }
@@ -137,34 +150,37 @@ namespace SudokuSolver
         /// <returns>The number of values found</returns>
         public int applyFoundValueTechnique()
         {
-            int foundValues = 0;
-
-            // Check for values with only onw possible square where they can go
-            foreach (Entity entity in mEntities)
+            // Check for entities where there is only one possible place for a value
+            for (int rank = 1; rank <= 5; rank++)
             {
-                foreach (byte value in entity.MissingValues)
+                foreach (Entity entity in mEntities)
                 {
-                    List<Square> candidateSquares = entity.ValueCandidateSquares(value);
-
-                    if (candidateSquares.Count == 1)
+                    foreach (byte value in entity.MissingValues)
                     {
-                        insertValue(value, candidateSquares.First(), entity.EntityTechnique());
-                        foundValues++;
+                        List<Square> candidateSquares = entity.ValueCandidateSquares(value);
+
+                        if (candidateSquares.Count == 1 && entity.Squares.Max(s => s.EliminatedRank(value)) <= rank)
+                        {
+                            insertValue(value, candidateSquares.Single(), new EntityFoundValueTechnique(entity, candidateSquares.Single()));
+
+                            return 1 + applyFoundValueTechnique();
+                        }
+                    }
+                }
+
+                // Check for quares that can only have one value
+                foreach (Square square in mGrid)
+                {
+                    if (square.PossibleValues.Count == 1 && square.EliminatedValues.Max(v => square.EliminatedRank(v)) <= rank)
+                    {
+                        insertValue(square.PossibleValues.Single(), square, new OnlyPossibleValueTechnique(square));
+
+                        return 1 + applyFoundValueTechnique();
                     }
                 }
             }
 
-            // Check for quares that can only have one value
-            foreach (Square square in mGrid)
-            {
-                if (square.PossibleValues.Count == 1)
-                {
-                    insertValue(square.PossibleValues.First(), square, new OnlyPossibleValueTechnique());
-                    foundValues++;
-                }
-            }
-
-            return foundValues;
+            return 0;
         }
 
         /// <summary>
@@ -179,7 +195,7 @@ namespace SudokuSolver
             {
                 foreach (byte value in entity.MissingValues)
                 {
-                    List<Square> candidateSquares = entity.ValueCandidateSquares(value);
+                    List<Square> candidateSquares = new List<Square>(entity.ValueCandidateSquares(value));
 
                     // For each possible value in the entity, check if there is only two squares where it can be
                     if (candidateSquares.Count == 2)
@@ -189,11 +205,11 @@ namespace SudokuSolver
 
                         foreach (Entity overlapee in mEntities.Where(entityFilter))
                         {
-                            PossibleValueOverlapTechnique overlapTechnique = new PossibleValueOverlapTechnique();
+                            PossibleValueOverlapTechnique overlapTechnique = new PossibleValueOverlapTechnique(overlapee, candidateSquares, value);
 
                             foreach (Square square in overlapee.Squares.Except(candidateSquares))
                             {
-                                square.eliminatePossibleValue(value, overlapTechnique);
+                                square.eliminatePossibleValue(value, overlapTechnique, mFoundValues);
                             }
                         }
                     }
@@ -238,13 +254,14 @@ namespace SudokuSolver
                         List<Square> closureSquares = squareUnion.Distinct().ToList() ;
                         if (closureSquares.Count() == combo.Count)
                         {
-                            PossibleValueClosureTechnique closureTechnique = new PossibleValueClosureTechnique();
+                            PossibleValueClosureTechnique closureTechnique = new PossibleValueClosureTechnique(combo, closureSquares, entity);
 
+                            // For each value remaining in the closure squares 
                             foreach (byte value in closureSquares.SelectMany(s => s.PossibleValues).Except(combo).ToList())
                             {
                                 foreach (Square square in closureSquares)
                                 {
-                                    square.eliminatePossibleValue(value, closureTechnique);
+                                    square.eliminatePossibleValue(value, closureTechnique, mFoundValues);
                                 }
                             }
                         }
@@ -265,7 +282,7 @@ namespace SudokuSolver
             {
                 foreach (byte value in entityA.MissingValues)
                 {
-                    List<Square> candidateSquaresA = entityA.ValueCandidateSquares(value);
+                    List<Square> candidateSquaresA = new List<Square>(entityA.ValueCandidateSquares(value));
                     if (candidateSquaresA.Count == 2)
                     {
                         Func<Entity, bool> entityFilter = e =>
@@ -286,18 +303,18 @@ namespace SudokuSolver
                             // Check if the two entities create a row shadow for the value
                             if (rows.Distinct().Count() == 2 && rows.Skip(2).Distinct().Count() == 2)
                             {
-                                PossibleValueRowShadow rowShadowTechnique = new PossibleValueRowShadow();
+                                PossibleValueRowShadow rowShadowTechnique = new PossibleValueRowShadow(entityA, entityB, value, squares, rows.First(), rows.Skip(1).First());
 
                                 for (int i = 0; i < Constants.BOARD_SIZE; i++)
                                 {
                                     if (!squares.Contains(mGrid[rows[0], i]))
                                     {
-                                        mGrid[rows[0], i].eliminatePossibleValue(value, rowShadowTechnique);
+                                        mGrid[rows[0], i].eliminatePossibleValue(value, rowShadowTechnique, mFoundValues);
                                     }
 
                                     if (!squares.Contains(mGrid[rows[1], i]))
                                     {
-                                        mGrid[rows[1], i].eliminatePossibleValue(value, rowShadowTechnique);
+                                        mGrid[rows[1], i].eliminatePossibleValue(value, rowShadowTechnique, mFoundValues);
                                     }
                                 }
                             }
@@ -305,18 +322,18 @@ namespace SudokuSolver
                             // Check if the two entities create a column shadow for the value
                             if (columns.Distinct().Count() == 2 && columns.Skip(2).Distinct().Count() == 2)
                             {
-                                PossibleValueColumnShadow columnShadowTechnique = new PossibleValueColumnShadow();
+                                PossibleValueColumnShadow columnShadowTechnique = new PossibleValueColumnShadow(entityA, entityB, value, squares, columns.First(), columns.Skip(1).First());
 
                                 for (int i = 0; i < Constants.BOARD_SIZE; i++)
                                 {
                                     if (!squares.Contains(mGrid[i, columns[0]]))
                                     {
-                                        mGrid[i, columns[0]].eliminatePossibleValue(value, columnShadowTechnique);
+                                        mGrid[i, columns[0]].eliminatePossibleValue(value, columnShadowTechnique, mFoundValues);
                                     }
 
                                     if (!squares.Contains(mGrid[i, columns[1]]))
                                     {
-                                        mGrid[i, columns[1]].eliminatePossibleValue(value, columnShadowTechnique);
+                                        mGrid[i, columns[1]].eliminatePossibleValue(value, columnShadowTechnique, mFoundValues);
                                     }
                                 } 
                             }
@@ -341,6 +358,14 @@ namespace SudokuSolver
         {
             get { return mEntities; }
         }
+
+        /// <summary>
+        /// Property to access the number of values found so far
+        /// </summary>
+        public int FoundValues
+        {
+            get { return mFoundValues;  }
+        }
     }
 
     /// <summary>
@@ -354,7 +379,7 @@ namespace SudokuSolver
         private int mOrderSolved;
         private List<byte> mPossibleValues;
 
-        private Dictionary<byte, SolvingTechnique> mEliminatedValueTechniques;
+        private Dictionary<byte, List<EliminationTechnique>> mEliminatedValueTechniques;
         private SolvingTechnique mTechnique;
 
         public Square(int pRow, int pColumn)
@@ -364,7 +389,7 @@ namespace SudokuSolver
             mFinalValue = 0;
             mOrderSolved = 0;
             mPossibleValues = new List<byte>() {1,2,3,4,5,6,7,8,9};
-            mEliminatedValueTechniques = new Dictionary<byte, SolvingTechnique>();
+            mEliminatedValueTechniques = new Dictionary<byte, List<EliminationTechnique>>();
         }
 
         /// <summary>
@@ -372,12 +397,17 @@ namespace SudokuSolver
         /// </summary>
         /// <param name="pValue">The value to remove</param>
         /// <param name="pTechnique">The technique used to remove the value</param>
-        public void eliminatePossibleValue(byte pValue, SolvingTechnique pTechnique)
+        public void eliminatePossibleValue(byte pValue, EliminationTechnique pTechnique, int pFoundValues)
         {
+            pTechnique.Order = pFoundValues;
             if (mPossibleValues.Contains(pValue))
             {
                 mPossibleValues.Remove(pValue);
-                mEliminatedValueTechniques.Add(pValue, pTechnique);
+                mEliminatedValueTechniques.Add(pValue, new List<EliminationTechnique>() { pTechnique });
+            }
+            else if (mEliminatedValueTechniques[pValue].Last().Rank >= pTechnique.Rank)
+            {
+                mEliminatedValueTechniques[pValue].Add(pTechnique);
             }
         }
 
@@ -412,6 +442,14 @@ namespace SudokuSolver
         }
 
         /// <summary>
+        /// Property to access the list of eliminated values for this square
+        /// </summary>
+        public List<byte> EliminatedValues
+        {
+            get { return mEliminatedValueTechniques.Keys.ToList(); }
+        }
+
+        /// <summary>
         /// Property to access and set the value of the square
         /// </summary>
         public byte Value
@@ -425,6 +463,41 @@ namespace SudokuSolver
         public int Order
         {
             get { return mOrderSolved;  }
+        }
+
+        /// <summary>
+        /// Gets the technique used to eliminate a value from the square
+        /// </summary>
+        /// <param name="pValue">The value to get the technique for</param>
+        /// <param name="pOrder">The maximum order which the techniques are applied at.</param>
+        public List<EliminationTechnique> EliminatedTechnique(byte pValue, int pOrder)
+        {
+            int rank = mEliminatedValueTechniques[pValue].Last(et => et.Order < pOrder).Rank;
+            return mEliminatedValueTechniques[pValue].Where(et => et.Rank == rank && et.Order < pOrder).ToList();
+        }
+
+        /// <summary>
+        /// The rank of the technique used to eliminate a value from this square
+        /// </summary>
+        /// <param name="pValue">The eliminated value</param>
+        public int EliminatedRank(byte pValue)
+        {
+            if (mEliminatedValueTechniques.ContainsKey(pValue))
+            {
+                return mEliminatedValueTechniques[pValue].Last().Rank;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Property to access the order in which this square was solved
+        /// </summary>
+        public SolvingTechnique Technique
+        {
+            get { return mTechnique; }
         }
 
         /// <summary>
@@ -448,18 +521,21 @@ namespace SudokuSolver
     /// This class represents an entity (row, column, 3x3 box) that must have the all the values 1-9 once and only once.
     /// The possible squares for each value in the entity are tracked and eliminated one by one.
     /// </summary>
-    public abstract class Entity
+    public class Entity
     { 
         private List<Square> mSquares;
         private List<byte> mMissingValues;
         private Dictionary<byte, List<Square>> mCandidateSquares;
-        
-        public Entity(List<Square> pSquares)
+
+        private String mEntityType;
+
+        public Entity(List<Square> pSquares, String pEntityType)
         {
             mSquares = pSquares;
+            mEntityType = pEntityType;
             mMissingValues = new List<byte>(){ 1, 2, 3, 4, 5, 6, 7, 8, 9 };
             mCandidateSquares = new Dictionary<byte, List<Square>>();
-            mMissingValues.ForEach(value => mCandidateSquares.Add(value, new List<Square>(mSquares)));
+            mMissingValues.ForEach(v => mCandidateSquares.Add(v, new List<Square>(mSquares)));
         }
 
         /// <summary>
@@ -469,7 +545,8 @@ namespace SudokuSolver
         /// <returns>The list of candidate squares</returns>
         public List<Square> ValueCandidateSquares(byte pValue)
         {
-            return mCandidateSquares[pValue] = mCandidateSquares[pValue].Where(square => square.PossibleValues.Contains(pValue)).ToList();;
+            mCandidateSquares[pValue].RemoveAll(s => !s.PossibleValues.Contains(pValue) );
+            return mCandidateSquares[pValue];
         }
 
         /// <summary>
@@ -479,7 +556,8 @@ namespace SudokuSolver
         {
             get
             {
-                return mMissingValues = mMissingValues.Where(value => this.ValueCandidateSquares(value).Any()).ToList();
+                mMissingValues.RemoveAll(v => !this.ValueCandidateSquares(v).Any());
+                return mMissingValues;
             }
         }
 
@@ -492,63 +570,11 @@ namespace SudokuSolver
         }
 
         /// <summary>
-        /// Creates a solving technique for the entity. This is abstract so the correct technique for each type of entity
-        /// (bow, row, column) can be created.
+        /// Property to access the entity type string
         /// </summary>
-        /// <returns>The solving technique created</returns>
-        public abstract SolvingTechnique EntityTechnique();
-
-    }
-
-    /// <summary>
-    /// This class represents the 3x3 Box entity
-    /// </summary>
-    public class Box : Entity
-    {
-        public Box(List<Square> pSquares) : base(pSquares) { }
-
-        /// <summary>
-        ///  Creates a solving technique for a Box
-        /// </summary>
-        /// <returns>The solving technique created</returns>
-        public override SolvingTechnique EntityTechnique()
+        public String EntityType
         {
-            return new BoxFoundValueTechnique();
-        }
-    }
-
-    /// <summary>
-    /// This class respresents the row entity
-    /// </summary>
-    public class Row : Entity
-    {
-        public Row(List<Square> pSquares) : base(pSquares) { }
-
-        /// <summary>
-        ///  Creates a solving technique for a Row
-        /// </summary>
-        /// <returns>The solving technique created</returns>
-        public override SolvingTechnique EntityTechnique()
-        {
-            return new RowFoundValueTechnique();
-        }
-
-    }
-
-    /// <summary>
-    /// This class represents the column entity
-    /// </summary>
-    public class Column : Entity
-    {
-        public Column(List<Square> pSquares) : base(pSquares) { }
-
-        /// <summary>
-        ///  Creates a solving technique for a Column
-        /// </summary>
-        /// <returns>The solving technique created</returns>
-        public override SolvingTechnique EntityTechnique()
-        {
-            return new ColumnFoundValueTechnique();
+            get { return mEntityType; }
         }
     }
 
@@ -557,8 +583,7 @@ namespace SudokuSolver
     /// </summary>
     public class SudokuSolver
     {
-        private const int SLEEP_TIME_MS = 62;
-        private const double VALUE_PERCENT  = 1.23;
+        private const int SLEEP_TIME_MS = 50;
 
         /// <summary>
         /// Solves a given sudoku. 
@@ -568,7 +593,9 @@ namespace SudokuSolver
             try
             {
                 Board board = new Board(pSudokuValues);
-                double progress = 0.0;
+                int progress = board.FoundValues;
+                pBackgroundSudokuSolver.ReportProgress(progress);
+                Thread.Sleep(SLEEP_TIME_MS);
 
                 // Main solving loop. A value should be found on every iteration
                 while (true)
@@ -582,6 +609,9 @@ namespace SudokuSolver
                     // Check if the sudoku is solved
                     if (board.isSolved())
                     {
+                        progress = 81;
+                        pBackgroundSudokuSolver.ReportProgress(progress);
+                        Thread.Sleep(SLEEP_TIME_MS);
                         return SolveResult.createSuccessResult(board.Grid);
                     }
 
@@ -589,9 +619,9 @@ namespace SudokuSolver
                     int foundValues = board.applyFoundValueTechnique();
                     if (foundValues > 0)
                     {
-                        progress += foundValues * VALUE_PERCENT;
-                        pBackgroundSudokuSolver.ReportProgress(Convert.ToInt32(progress));
-                        Thread.Sleep(SLEEP_TIME_MS);
+                        progress += foundValues;
+                        pBackgroundSudokuSolver.ReportProgress(progress);
+                        Thread.Sleep(SLEEP_TIME_MS * foundValues);
                         continue;
                     }
 
@@ -602,9 +632,9 @@ namespace SudokuSolver
                     foundValues = board.applyFoundValueTechnique();
                     if (foundValues > 0)
                     {
-                        progress += foundValues * VALUE_PERCENT;
-                        pBackgroundSudokuSolver.ReportProgress(Convert.ToInt32(progress));
-                        Thread.Sleep(SLEEP_TIME_MS);
+                        progress += foundValues;
+                        pBackgroundSudokuSolver.ReportProgress(progress);
+                        Thread.Sleep(SLEEP_TIME_MS * foundValues);
                         continue;
                     }
 
@@ -615,9 +645,9 @@ namespace SudokuSolver
                     foundValues = board.applyFoundValueTechnique();
                     if (foundValues > 0)
                     {
-                        progress += foundValues * VALUE_PERCENT;
-                        pBackgroundSudokuSolver.ReportProgress(Convert.ToInt32(progress));
-                        Thread.Sleep(SLEEP_TIME_MS);
+                        progress += foundValues;
+                        pBackgroundSudokuSolver.ReportProgress(progress);
+                        Thread.Sleep(SLEEP_TIME_MS * foundValues);
                         continue;
                     }
 
@@ -628,9 +658,9 @@ namespace SudokuSolver
                     foundValues = board.applyFoundValueTechnique();
                     if (foundValues > 0)
                     {
-                        progress += foundValues * VALUE_PERCENT;
-                        pBackgroundSudokuSolver.ReportProgress(Convert.ToInt32(progress));
-                        Thread.Sleep(SLEEP_TIME_MS);
+                        progress += foundValues;
+                        pBackgroundSudokuSolver.ReportProgress(progress);
+                        Thread.Sleep(SLEEP_TIME_MS * foundValues);
                         continue;
                     }
                     else 
