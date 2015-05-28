@@ -18,6 +18,8 @@ namespace SudokuSolver
         private SolveResult mSolveResult;
         private byte[,] mSudokuValues;
 
+        private const int BAR_MAX = 81;
+
         public BackgroundSolveWorkerFrame(byte[,] pSudokuValues)
         {
             InitializeComponent();
@@ -25,7 +27,9 @@ namespace SudokuSolver
             backgroundWorker.DoWork += new DoWorkEventHandler(backgroundWorkerDo);
             backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorkerFinished);
             backgroundWorker.ProgressChanged += new ProgressChangedEventHandler(backgroundWorkerProgress);
+            progressBar.Maximum = BAR_MAX;
             mSudokuValues = pSudokuValues;
+            this.FormBorderStyle = FormBorderStyle.FixedSingle; 
         }
 
         /// <summary>
@@ -54,9 +58,9 @@ namespace SudokuSolver
         {
             int progress = e.ProgressPercentage;
 
-            if (progress > 100)
+            if (progress > BAR_MAX)
             {
-                progress = 100;
+                progress = BAR_MAX;
             }
 
             if (progress < 0)

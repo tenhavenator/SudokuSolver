@@ -51,6 +51,13 @@
       <DependentUpon>BackgroundSolveWorkerFrame.cs</DependentUpon>
     </Compile>
     <Compile Include="Constants.cs" />
+    <Compile Include="DetailsFrame.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DetailsFrame.Designer.cs">
+      <DependentUpon>DetailsFrame.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EliminationTechnique.cs" />
     <Compile Include="SolveResult.cs" />
     <Compile Include="SolvingTechnique.cs" />
     <Compile Include="SudokuGame.cs" />
@@ -65,6 +72,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="BackgroundSolveWorkerFrame.resx">
       <DependentUpon>BackgroundSolveWorkerFrame.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DetailsFrame.resx">
+      <DependentUpon>DetailsFrame.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SudokuUIFrame.resx">
       <DependentUpon>SudokuUIFrame.cs</DependentUpon>
