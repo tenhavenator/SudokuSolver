@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace SudokuSolver
 {
-    public class Constants
+    public static class Constants
     {
         public const int BOARD_SIZE = 9;
         public const int BOX_SIZE = 3;
-
     }
 }
