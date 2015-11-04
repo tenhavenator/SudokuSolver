@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokuSolver", "SudokuSolver.csproj", "{D536670B-6840-4CF9-89C7-2CE3F30D6CF6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokuSolver.UI", "SudokuSolver.UI\SudokuSolver.UI.csproj", "{D536670B-6840-4CF9-89C7-2CE3F30D6CF6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokuSolver.Core", "..\SudokuSolver.Core\SudokuSolver.Core.csproj", "{30F8C723-10C3-46D2-9704-F4D5EA6DCAE9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokuSolver.Core", "SudokuSolver.Core\SudokuSolver.Core.csproj", "{30F8C723-10C3-46D2-9704-F4D5EA6DCAE9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
