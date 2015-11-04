@@ -1,34 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Drawing;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace SudokuSolver
 {
-    public enum ControlState { ACTIVE, IDLE, LOADING };
+    public enum State { ACTIVE, IDLE, LOADING };
 
-    /// <summary>
-    /// This class contains the actions related to UI interaction on the main screen
-    /// </summary>
     public partial class SudokuMainView : Form
     {
-        private const int SUDOKU_SIZE = 81;
-
         private SudokuGridLayoutPanel mSudokuGridLayoutPanel;
-        private ControlState mCurrentState;
+        private State mCurrentState;
 
-        // User input events
         public event EventHandler ClearSignal;
         public event EventHandler FinishedSignal;
+        public event EventHandler NextSignal;
+        public event EventHandler PrevSignal;
+        public event EventHandler SolveSignal;
+        public event EventHandler UnsolveSignal;
+
+        public event EventHandler<CellEventArgs> ClickSignal;
+
+        private EventHandler mMouseEnterTextBox;
+        private EventHandler mMouseLeaveTextBox;
+        private MouseEventHandler mMouseDownTextBox;
 
         [DllImport("user32.dll")]
-        static extern bool HideCaret(IntPtr hWnd);
+        private static extern bool HideCaret(IntPtr hWnd);
 
         public SudokuMainView()
         {
@@ -36,41 +34,20 @@ namespace SudokuSolver
             mSudokuGridLayoutPanel = new SudokuGridLayoutPanel();
             mSudokuGridLayoutPanel.Anchor = AnchorStyles.None;
             mSudokuGridLayoutPanel.Location = new Point(38, 50);
-            this.mPanelSudokuMain.Controls.Add(mSudokuGridLayoutPanel);
+            mPanelSudokuMain.Controls.Add(mSudokuGridLayoutPanel);
 
-            // Setup button handlers
-            this.mButtonClear.Click += new EventHandler(OnClearButtonClick);
-            this.mButtonFinished.Click += new EventHandler(OnFinishedButtonClick);
+            mButtonClear.Click += new EventHandler(OnClearButtonClick);
+            mButtonFinished.Click += new EventHandler(OnFinishedButtonClick);
+            mButtonNext.Click += new EventHandler(OnNextButtonClick);
+            mButtonBack.Click += new EventHandler(OnPrevButtonClick);
+            mButtonSolve.Click += new EventHandler(OnSolveButtonClick);
+            mButtonUnsolve.Click += new EventHandler(OnUnsolveButtonClick);
 
-            mCurrentState = ControlState.IDLE;
+            mMouseEnterTextBox = new EventHandler(OnMouseEnterTextBox);
+            mMouseLeaveTextBox = new EventHandler(OnMouseLeaveTextBox);
+            mMouseDownTextBox = new MouseEventHandler(OnMouseDownTextBox);
 
-            for (int i = 0; i < SUDOKU_SIZE; i++)
-            {
-                TextBox textBox = mSudokuGridLayoutPanel.TextBoxes[i];
-                textBox.MouseEnter += (_pSender, _pArgs) =>
-                {
-                    if (textBox.ReadOnly && textBox.BackColor == Color.White && !textBox.Text.Equals(string.Empty))
-                    {
-                        textBox.BackColor = Color.LightGreen;
-                    }
-                };
-
-                textBox.MouseLeave += (_pSender, _pArgs) =>
-                { 
-                    if(textBox.BackColor == Color.LightGreen)
-                    {
-                        textBox.BackColor = Color.White;
-                    }
-                };
-
-                textBox.MouseDown += (_pSender, _pArgs) =>
-                {
-                    if (textBox.ReadOnly)
-                    {
-                        HideCaret(textBox.Handle);
-                    }
-                };
-            }
+            mCurrentState = State.IDLE;
         }
 
         private void OnClearButtonClick(object pSender, EventArgs pArgs)
@@ -90,97 +67,171 @@ namespace SudokuSolver
             }
         }
 
-        public void ChangeControlState(ControlState pState)
+        private void OnNextButtonClick(object pSender, EventArgs pArgs)
         {
-            if (pState == ControlState.LOADING && mCurrentState == ControlState.IDLE)
+            if (NextSignal != null)
+            {
+                NextSignal(pSender, pArgs);
+            }
+            
+        }
+
+        private void OnPrevButtonClick(object pSender, EventArgs pArgs)
+        {
+            if (PrevSignal != null)
+            {
+                PrevSignal(pSender, pArgs);
+            }
+        }
+
+        private void OnSolveButtonClick(object pSender, EventArgs pArgs)
+        {
+            if (SolveSignal != null)
+            {
+                SolveSignal(pSender, pArgs);
+            }
+        }
+
+        private void OnUnsolveButtonClick(object pSender, EventArgs pArgs)
+        {
+            if (UnsolveSignal != null)
+            {
+                UnsolveSignal(pSender, pArgs);
+            }
+        }
+
+        private void OnMouseEnterTextBox(object pSender, EventArgs _pArgs)
+        {
+            TextBox textBox = pSender as TextBox;
+            if (!textBox.Text.Equals(string.Empty))
+            {
+                textBox.BackColor = Color.LightGreen;
+            }
+        }
+
+        private void OnMouseLeaveTextBox(object pSender, EventArgs _pArgs)
+        {
+            TextBox textBox = pSender as TextBox;
+            textBox.BackColor = Color.White;
+        }
+
+        private void OnMouseDownTextBox(object pSender, MouseEventArgs _pArgs)
+        {
+            TextBox textBox = pSender as TextBox;
+            HideCaret(textBox.Handle);
+        }
+
+        /*private void OnClickTextBox(object pSender, EventArgs _pArgs)
+        {
+            TextBox textBox = pSender as TextBox;
+            if (!textBox.Text.Equals(string.Empty) && ClickSignal != null)
+            {
+                int index = Array.IndexOf(mSudokuGridLayoutPanel.TextBoxes, textBox);
+                ClickSignal(pSender, new ClickEventArgs() { Index = index });
+            }
+        }*/
+
+        public void ChangeControlState(State pNextState)
+        {
+            if (mCurrentState == State.IDLE && pNextState == State.LOADING)
             { 
-                this.mButtonClear.Enabled = false;
-                this.mButtonFinished.Enabled = false;
-                this.UseWaitCursor = true;
+                mButtonClear.Enabled = false;
+                mButtonFinished.Enabled = false;
+                UseWaitCursor = true;
 
-                for (int i = 0; i < SUDOKU_SIZE; i++)
+                mSudokuGridLayoutPanel.ForEachTextBox(t => 
                 {
-                    mSudokuGridLayoutPanel.TextBoxes[i].ReadOnly = true;
-                    mSudokuGridLayoutPanel.TextBoxes[i].Cursor = Cursors.Arrow;
-                }
-
+                    t.ReadOnly = true;
+                    t.Cursor = Cursors.Arrow;
+                    t.MouseDown += mMouseDownTextBox;
+                });
             }
-            else if (pState == ControlState.IDLE && mCurrentState == ControlState.IDLE)
+            else if (mCurrentState == State.IDLE && pNextState == State.IDLE)
             {
-                for (int i = 0; i < SUDOKU_SIZE; i++)
+                mSudokuGridLayoutPanel.ForEachTextBox(t =>
                 {
-                    mSudokuGridLayoutPanel.TextBoxes[i].Text = string.Empty;
-                }
+                    t.Text = string.Empty;
+                });
             }
-            else if (pState == ControlState.IDLE && mCurrentState == ControlState.LOADING)
+            else if (mCurrentState == State.LOADING && pNextState == State.IDLE)
             {
-                this.mButtonClear.Enabled = true;
-                this.mButtonFinished.Enabled = true;
-                this.UseWaitCursor = false;
+                mButtonClear.Enabled = true;
+                mButtonFinished.Enabled = true;
+                UseWaitCursor = false;
 
-                for (int i = 0; i < SUDOKU_SIZE; i++)
+                mSudokuGridLayoutPanel.ForEachTextBox(t =>
                 {
-                    mSudokuGridLayoutPanel.TextBoxes[i].ReadOnly = false;
-                    mSudokuGridLayoutPanel.TextBoxes[i].Cursor = Cursors.IBeam;
-                }
+                    t.ReadOnly = false;
+                    t.Cursor = Cursors.IBeam;
+                });
             }
-            else if (pState == ControlState.ACTIVE && mCurrentState == ControlState.LOADING)
+            else if (mCurrentState == State.LOADING && pNextState == State.ACTIVE)
             {
-                this.mButtonClear.Enabled = true;
+                mButtonClear.Enabled = true;
+                mButtonFinished.Visible = false;
+                mLabelFinished.Visible = false;
+                mLabelSolveDetails.Visible = true;
+                mButtonSolve.Visible = true;
+                mButtonUnsolve.Visible = true;
+                mButtonNext.Visible = true;
+                mButtonBack.Visible = true;
+                UseWaitCursor = false;
 
-                this.mButtonFinished.Visible = false;
-                this.mLabelFinished.Visible = false;
-
-                this.mLabelSolveDetails.Visible = true;
-                this.mButtonSolve.Visible = true;
-                this.mButtonNext.Visible = true;
-                this.mButtonBack.Visible = true;
-
-                this.UseWaitCursor = false;
-
-                for (int i = 0; i < SUDOKU_SIZE; i++)
+                mSudokuGridLayoutPanel.ForEachTextBox(t =>
                 {
-                    if (mSudokuGridLayoutPanel.TextBoxes[i].Text.Equals(string.Empty))
+                    if (t.Text.Equals(string.Empty))
                     {
-                        mSudokuGridLayoutPanel.TextBoxes[i].BackColor = Color.White;
+                        t.BackColor = Color.White;
+                        t.MouseEnter += mMouseEnterTextBox;
+                        t.MouseLeave += mMouseLeaveTextBox;
                     }
-                }
+                });
             }
-            else if (pState == ControlState.IDLE && mCurrentState == ControlState.ACTIVE)
+            else if (mCurrentState == State.ACTIVE && pNextState == State.IDLE)
             {
-                this.mButtonFinished.Visible = true;
-                this.mButtonFinished.Enabled = true;
-                this.mLabelFinished.Visible = true;
+                mButtonFinished.Visible = true;
+                mButtonFinished.Enabled = true;
+                mLabelFinished.Visible = true;
 
-                this.mLabelSolveDetails.Visible = false;
-                this.mButtonSolve.Visible = false;
-                this.mButtonNext.Visible = false;
-                this.mButtonBack.Visible = false;
+                mLabelSolveDetails.Visible = false;
+                mButtonSolve.Visible = false;
+                mButtonUnsolve.Visible = false;
+                mButtonNext.Visible = false;
+                mButtonBack.Visible = false;
 
-                for (int i = 0; i < SUDOKU_SIZE; i++)
+                mSudokuGridLayoutPanel.ForEachTextBox(t =>
                 {
-                    mSudokuGridLayoutPanel.TextBoxes[i].ReadOnly = false;
-                    mSudokuGridLayoutPanel.TextBoxes[i].Cursor = Cursors.IBeam;
-                    mSudokuGridLayoutPanel.TextBoxes[i].Text = string.Empty;
-                    mSudokuGridLayoutPanel.TextBoxes[i].BackColor = Color.Empty;
-                }
+                    t.ReadOnly = false;
+                    t.Cursor = Cursors.IBeam;
+                    t.Text = string.Empty;
+                    t.BackColor = Color.Empty;
+                    t.MouseEnter -= mMouseEnterTextBox;
+                    t.MouseEnter -= mMouseLeaveTextBox;
+                    t.MouseDown -= mMouseDownTextBox;
+                });
             }
             else
             {
                 return;
             }
 
-            mCurrentState = pState;
+            mCurrentState = pNextState;
         }
 
-        public string GetTextBoxText(int pIndex)
+        public char this[int pIndex]
         {
-            return mSudokuGridLayoutPanel.TextBoxes[pIndex].Text;
+            get { return '\0'; }
         }
 
-        public void SetTextBoxText(int pIndex, string pText)
+        public char GetTextBoxText(int pIndex)
         {
-            mSudokuGridLayoutPanel.TextBoxes[pIndex].Text = pText;
+            string text = mSudokuGridLayoutPanel.TextBoxes[pIndex].Text;
+            return text.Length == 0 ? '\0' : text[0];
+        }
+
+        public void SetTextBoxText(int pIndex, char pText)
+        {
+            mSudokuGridLayoutPanel.TextBoxes[pIndex].Text = pText.ToString();
         }
 
         public void ShowView()
@@ -188,5 +239,14 @@ namespace SudokuSolver
             Application.EnableVisualStyles();
             Application.Run(this);
         }
+
+    }
+
+    
+
+
+    public class CellEventArgs : EventArgs
+    {
+        public int Index { get; set; }
     }
 }

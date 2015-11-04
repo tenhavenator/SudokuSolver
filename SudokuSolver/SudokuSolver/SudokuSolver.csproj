@@ -52,13 +52,7 @@
     <Compile Include="DetailsFrame.Designer.cs">
       <DependentUpon>DetailsFrame.cs</DependentUpon>
     </Compile>
-    <Compile Include="EliminationTechnique.cs" />
-    <Compile Include="SolveResult.cs" />
-    <Compile Include="SolvingTechnique.cs" />
     <Compile Include="SudokuController.cs" />
-    <Compile Include="SudokuGame.cs" />
-    <Compile Include="SudokuModel.cs" />
-    <Compile Include="SudokuSolver.cs" />
     <Compile Include="SudokuMainView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -97,7 +91,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\SudokuSolver.Core\SudokuSolver.Core.csproj">
+      <Project>{30f8c723-10c3-46d2-9704-f4d5ea6dcae9}</Project>
+      <Name>SudokuSolver.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -28,6 +28,14 @@ namespace SudokuSolver
             }
         }
 
+        public void ForEachTextBox(Action<TextBox> pAction)
+        {
+            for (int i = 0; i < SUDOKU_SIZE; i++)
+            {
+                pAction(mTextBoxes[i]);
+            }
+        }
+
         public SudokuGridLayoutPanel()
         {
             this.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;

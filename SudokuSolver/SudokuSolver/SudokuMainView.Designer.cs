@@ -43,6 +43,7 @@ namespace SudokuSolver
             this.mButtonSolve = new System.Windows.Forms.Button();
             this.mButtonFinished = new System.Windows.Forms.Button();
             this.mLabelFinished = new System.Windows.Forms.Label();
+            this.mButtonUnsolve = new System.Windows.Forms.Button();
             this.mPanelSudokuMain.SuspendLayout();
             this.mPanelSudokuControls.SuspendLayout();
             this.SuspendLayout();
@@ -88,6 +89,7 @@ namespace SudokuSolver
             // mPanelSudokuControls
             // 
             this.mPanelSudokuControls.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.mPanelSudokuControls.Controls.Add(this.mButtonUnsolve);
             this.mPanelSudokuControls.Controls.Add(this.mLabelSolveDetails);
             this.mPanelSudokuControls.Controls.Add(this.mButtonBack);
             this.mPanelSudokuControls.Controls.Add(this.mButtonNext);
@@ -133,7 +135,7 @@ namespace SudokuSolver
             // 
             // mButtonClear
             // 
-            this.mButtonClear.Location = new System.Drawing.Point(3, 37);
+            this.mButtonClear.Location = new System.Drawing.Point(3, 3);
             this.mButtonClear.Name = "mButtonClear";
             this.mButtonClear.Size = new System.Drawing.Size(75, 23);
             this.mButtonClear.TabIndex = 5;
@@ -142,9 +144,9 @@ namespace SudokuSolver
             // 
             // mButtonSolve
             // 
-            this.mButtonSolve.Location = new System.Drawing.Point(3, 3);
+            this.mButtonSolve.Location = new System.Drawing.Point(3, 52);
             this.mButtonSolve.Name = "mButtonSolve";
-            this.mButtonSolve.Size = new System.Drawing.Size(75, 23);
+            this.mButtonSolve.Size = new System.Drawing.Size(78, 23);
             this.mButtonSolve.TabIndex = 4;
             this.mButtonSolve.Text = "Solve";
             this.mButtonSolve.UseVisualStyleBackColor = true;
@@ -168,6 +170,16 @@ namespace SudokuSolver
             this.mLabelFinished.Size = new System.Drawing.Size(159, 35);
             this.mLabelFinished.TabIndex = 3;
             this.mLabelFinished.Text = "Enter your custom sudoku and press \"Finished\"\r\n";
+            // 
+            // mButtonUnsolve
+            // 
+            this.mButtonUnsolve.Location = new System.Drawing.Point(84, 52);
+            this.mButtonUnsolve.Name = "mButtonUnsolve";
+            this.mButtonUnsolve.Size = new System.Drawing.Size(78, 23);
+            this.mButtonUnsolve.TabIndex = 9;
+            this.mButtonUnsolve.Text = "Unsolve";
+            this.mButtonUnsolve.UseVisualStyleBackColor = true;
+            this.mButtonUnsolve.Visible = false;
             // 
             // SudokuMainView
             // 
@@ -201,5 +213,6 @@ namespace SudokuSolver
         private System.Windows.Forms.Button mButtonBack;
         private System.Windows.Forms.Button mButtonNext;
         private System.Windows.Forms.Button mButtonClear;
+        private System.Windows.Forms.Button mButtonUnsolve;
     }
 }

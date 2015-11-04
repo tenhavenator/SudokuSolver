@@ -5,78 +5,110 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
-
+using SudokuSolver.Core.Model;
+using System.Threading;
 
 namespace SudokuSolver
 {
     public class SudokuController
     {
+        private const int DELAY = 2500;
         private const int SUDOKU_SIZE = 81;
 
         private SudokuMainView mView;
-
+        private IModel mModel;
 
         public SudokuController()
         {
             mView =  new SudokuMainView();
+            mModel = Model.CreateModel();
 
             mView.ClearSignal += (_pSender, _pArgs) => OnClearSignal();
             mView.FinishedSignal += (_pSender, _pArgs) => OnFinishedSignal();
+            mView.NextSignal += (_pSender, _pArgs) => OnNextSignal();
+            mView.PrevSignal += (_pSender, _pArgs) => OnPrevSignal();
+            mView.SolveSignal += (_pSender, _pArgs) => OnSolveSignal();
+            mView.UnsolveSignal += (_pSender, _pArgs) => OnUnsolveSignal();
 
             mView.ShowView();
         }
 
         private void OnClearSignal()
         {
-            // Do other stuff with the model
-
-            mView.ChangeControlState(ControlState.IDLE);
+            mModel.ClearGame();
+            mView.ChangeControlState(State.IDLE);
         }
 
         private void OnFinishedSignal()
         {
-            mView.ChangeControlState(ControlState.LOADING);
+            mView.ChangeControlState(State.LOADING);
 
-            byte[] sudokuValues = new byte[SUDOKU_SIZE];
+            char[] sudokuValues = new char[SUDOKU_SIZE];
+
             for (int i = 0; i < SUDOKU_SIZE; i++)
             {
-                string text = mView.GetTextBoxText(i);
-                if (text.Equals(string.Empty))
+                sudokuValues[i] = mView.GetTextBoxText(i);
+
+            }
+
+            DateTime start = DateTime.Now;
+            mModel.StartGame(sudokuValues, () => 
+            {
+                int elapsed = (int)(DateTime.Now - start).TotalMilliseconds;
+                if (elapsed < DELAY)
                 {
-                    sudokuValues[i] = 0;
+                    Thread.Sleep(DELAY - elapsed);
+                }
+
+                if (mModel.Error != null)
+                {
+                    mView.ChangeControlState(State.IDLE);
+                    MessageBox.Show("There was an error while trying to process the Sudoku: " + mModel.Error, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (mModel.Invalid)
+                {
+
+                    mView.ChangeControlState(State.IDLE);
+                    MessageBox.Show("The enter values are not a valid Sudoku", "Invalid Sudoku", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 else
                 {
-                    sudokuValues[i] = Convert.ToByte(text);
+                    mView.ChangeControlState(State.ACTIVE);
                 }
-            }
-
-            SudokuModel.StartGame(sudokuValues, OnSolveComplete);
+            });
         }
 
-        private void OnSolveComplete(SolveResult pResult)
+        private void OnSolveSignal()
         {
-            switch (pResult.ResultType)
+            var values = mModel.RemainingValues();
+            foreach (var value in values)
             {
-                case SolveResult.SUCCESS:
-                    mView.ChangeControlState(ControlState.ACTIVE);
-                    break;
-
-                case SolveResult.INVALID:
-                    mView.ChangeControlState(ControlState.IDLE);
-                    MessageBox.Show("The enter values are not a valid Sudoku", "Invalid Sudoku", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    break;
-
-                case SolveResult.ERROR:
-                    mView.ChangeControlState(ControlState.IDLE);
-                    MessageBox.Show("There was an error while trying to process the Sudoku: " + pResult.ErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    break;
-
-                default:
-                    // Should never happen 
-                    break;
+                mView.SetTextBoxText(value.Index, value.Value);
             }
         }
+
+        private void OnUnsolveSignal()
+        {
+            var values = mModel.InitialValues();
+            foreach (var value in values)
+            {
+                mView.SetTextBoxText(value.Index, '\0');
+            }
+        }
+
+        private void OnNextSignal()
+        {
+            IFoundValue value = mModel.NextValue();
+            mView.SetTextBoxText(value.Index, value.Value);
+        }
+
+        private void OnPrevSignal()
+        {
+            IFoundValue value = mModel.PrevValue();
+            mView.SetTextBoxText(value.Index, '\0');
+        }
+
+       
 
         /// <summary>
         /// Handler for the text box "mouse click" event. Displays the details of how the value was found if there is a 
