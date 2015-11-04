@@ -34,6 +34,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Messaging" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,12 +45,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BackgroundSolveWorkerFrame.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="BackgroundSolveWorkerFrame.Designer.cs">
-      <DependentUpon>BackgroundSolveWorkerFrame.cs</DependentUpon>
-    </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="DetailsFrame.cs">
       <SubType>Form</SubType>
@@ -57,27 +52,22 @@
     <Compile Include="DetailsFrame.Designer.cs">
       <DependentUpon>DetailsFrame.cs</DependentUpon>
     </Compile>
-    <Compile Include="EliminationTechnique.cs" />
-    <Compile Include="SolveResult.cs" />
-    <Compile Include="SolvingTechnique.cs" />
-    <Compile Include="SudokuGame.cs" />
-    <Compile Include="SudokuSolver.cs" />
-    <Compile Include="SudokuUIFrame.cs">
+    <Compile Include="SudokuController.cs" />
+    <Compile Include="SudokuMainView.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SudokuUIFrame.Designer.cs">
-      <DependentUpon>SudokuUIFrame.cs</DependentUpon>
+    <Compile Include="SudokuMainView.Designer.cs">
+      <DependentUpon>SudokuMainView.cs</DependentUpon>
     </Compile>
-    <Compile Include="SudokuSolverRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="BackgroundSolveWorkerFrame.resx">
-      <DependentUpon>BackgroundSolveWorkerFrame.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Include="UIComponents\SudokuGridLayoutPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <EmbeddedResource Include="DetailsFrame.resx">
       <DependentUpon>DetailsFrame.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SudokuUIFrame.resx">
-      <DependentUpon>SudokuUIFrame.cs</DependentUpon>
+    <EmbeddedResource Include="SudokuMainView.resx">
+      <DependentUpon>SudokuMainView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -100,6 +90,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SudokuSolver.Core\SudokuSolver.Core.csproj">
+      <Project>{30f8c723-10c3-46d2-9704-f4d5ea6dcae9}</Project>
+      <Name>SudokuSolver.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -32,7 +32,7 @@ namespace SudokuSolver
         /// </summary>
         private void InitializeTextBoxes()
         {
-            mSudokuTextBoxGrid = new TextBox[Constants.BOARD_SIZE, Constants.BOARD_SIZE];
+            mSudokuTextBoxGrid = new TextBox[Constants.ENTITY_SIZE, Constants.ENTITY_SIZE];
             mSudokuTextBoxGrid[0, 0] = textBox00;
             mSudokuTextBoxGrid[0, 1] = textBox10;
             mSudokuTextBoxGrid[0, 2] = textBox20;
@@ -123,9 +123,9 @@ namespace SudokuSolver
             mSudokuTextBoxGrid[8, 7] = textBox78;
             mSudokuTextBoxGrid[8, 8] = textBox88;
 
-            for (int row = 0; row < Constants.BOARD_SIZE; row++)
+            for (int row = 0; row < Constants.ENTITY_SIZE; row++)
             {
-                for (int column = 0; column < Constants.BOARD_SIZE; column++)
+                for (int column = 0; column < Constants.ENTITY_SIZE; column++)
                 {
                     mSudokuTextBoxGrid[row, column].BackColor = Color.Black;
                     mSudokuTextBoxGrid[row, column].ReadOnly = true;
@@ -172,5 +172,39 @@ namespace SudokuSolver
             get { return labelDetails.Text; }
             set { labelDetails.Text = value;  }
         }
+
+        /*public void sort()
+        {
+            // Select the techniques that are definately needed to eliminate a square
+            var appliedTechniques = (from s in foundValue.Entity.Squares
+                                     let techs = s.EliminatedTechnique(foundValue.Value)
+                                     where techs.Count == 1
+                                     select techs.Single()).ToList();
+
+            // Select the set of squares that do not have a matching elimination technique yet
+            var uncoveredSquares = (from s in foundValue.Entity.Squares
+                                    let techs = s.EliminatedTechnique(foundValue.Value)
+                                    where s != foundValue.Square && !techs.Intersect(appliedTechniques).Any()
+                                    select s).ToList();
+
+            // Select the techniques from the uncovered squares and order by occurence
+            var remainingTechniques = from s in uncoveredSquares
+                                      from tech in s.EliminatedTechnique(foundValue.Value)
+                                      group tech by tech into g
+                                      orderby g.Count() descending
+                                      select g.Key;
+
+            // Apply these techniques until all squares are covered
+            foreach (EliminationTechnique tech in remainingTechniques)
+            {
+                appliedTechniques.Add(tech);
+                uncoveredSquares.RemoveAll(s => s.EliminatedTechnique(foundValue.Value).Contains(tech));
+
+                if (!uncoveredSquares.Any())
+                {
+                    break;
+                }
+            }
+        }*/
     }
 }
