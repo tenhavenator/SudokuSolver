@@ -74,16 +74,9 @@ namespace SudokuSolver.Core.Solver
             List<FoundValue> foundValues = new List<FoundValue>();
             foreach (var square in mSquares.Where(s => !s.Filled))
             {
-                var methods = square.GetMethods().ToList();
-                if (methods.Any())
+                if (square.HasFoundValue())
                 {
-                    foundValues.Add(new FoundValue()
-                    {
-                        Index = square.Index,
-                        Value = square.PossibleValues.Single(),
-                        Methods = methods,
-                        Rank = methods.First().Rank
-                    });
+                    foundValues.Add(square.GetFoundValue());
                 }
             }
 

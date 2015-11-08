@@ -12,6 +12,7 @@ namespace SudokuSolver.Core.Solver
     {
         protected IEnumerable<Square> mSquares;
         protected IDictionary<char, ICollection<Square>> mValueSquares;
+        private char? mInserting;
 
         public Entity(IEnumerable<Square> pGrid, int pIndex)
         {
@@ -34,14 +35,24 @@ namespace SudokuSolver.Core.Solver
             get { return mSquares; }
         }
 
-        public void InsertValue(char pValue, int pIndex)
+        public void PreInsertion(char pValue)
         {
-            var technique = CreateTechnique(pValue, pIndex);
+            mInserting = pValue;
+        }
 
+        public void StartInsertion(int pIndex)
+        {
+            var technique = CreateTechnique(mInserting.Value, pIndex);
+            mValueSquares[mInserting.Value].Clear();
             foreach (Square square in mSquares)
             {
-                square.EliminatePossibility(pValue, technique);
+                square.EliminatePossibility(mInserting.Value, technique);
             }
+        }
+
+        public void EndInsertion()
+        {
+            mInserting = null;
         }
 
         public void EliminatePossibility(char pValue, Square pSquare)
@@ -49,7 +60,7 @@ namespace SudokuSolver.Core.Solver
             var squares = mValueSquares[pValue];
             squares.Remove(pSquare);
 
-            if (squares.Count() == 1)
+            if (squares.Count() == 1 && mInserting != pValue)
             {
                 squares.Single().AddMethod(pValue, CreateMethod(pValue));
             }

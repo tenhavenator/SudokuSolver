@@ -60,10 +60,9 @@ namespace SudokuSolver.Core.Solver
 
         public void InsertValue(char pValue)
         {
-            if(Filled)
-            {
-                return;
-            }
+            Filled = true;
+
+            mEntities.ForEach(e => e.PreInsertion(pValue));
 
             ITechnique tech = Technique.CreateOccupiedTechnique(pValue, Index);
             foreach (char value in Constants.ALL_VALUES)
@@ -71,18 +70,12 @@ namespace SudokuSolver.Core.Solver
                 EliminatePossibility(value, tech);
             }
 
-            mEntities.ForEach(e => e.InsertValue(pValue, Index));
-
-            Filled = true;
+            mEntities.ForEach(e => e.StartInsertion(Index));
+            mEntities.ForEach(e => e.EndInsertion());
         }
 
         public void EliminatePossibility(char pValue, ITechnique pTechnique)
         {
-            if(Filled)
-            {
-                return;
-            }
-
             var value = mValues[pValue];
             value.Techniques.Add(pTechnique);
             if (value.TechRank > pTechnique.Rank)
@@ -127,9 +120,27 @@ namespace SudokuSolver.Core.Solver
             return value.Techniques.Where(t => !pMinRankOnly || t.Rank == value.TechRank);
         }
 
-        public IEnumerable<Method> GetMethods()
+        public bool HasFoundValue()
         {
-            return mValues.SelectMany(p => p.Value.Methods);
+           return mValues.Where(p => p.Value.Methods.Any()).Any();
+        }
+
+        public FoundValue GetFoundValue()
+        {
+            if (HasFoundValue())
+            {
+                var value = mValues.First(p => p.Value.Methods.Any());
+
+                return new FoundValue()
+                {
+                    Index = this.Index,
+                    Value = value.Key,
+                    Methods = value.Value.Methods,
+                    Rank = value.Value.Methods.First().Rank
+                };
+            }
+
+            return null;
         }
     }
 }
