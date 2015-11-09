@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Linq;
-using SudokuSolver.Core.Model;
+﻿using SudokuSolver.Core.Model;
 using SudokuSolver.Core.Techniques;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SudokuSolver.Core.Solver
 {
+    /// <summary>
+    /// Class for solving a sudoku.
+    /// </summary>
     internal class SudokuSolver
     {
         private int mInitialCount;
@@ -14,17 +16,23 @@ namespace SudokuSolver.Core.Solver
         private List<Square> mSquares;
         private List<IFoundValue> mFoundValues;
 
+        /// <summary>
+        /// Instantiates a SudokuSolver. Private so that uses must access statically.
+        /// </summary>
+        /// <param name="pInitialValues">The list of initial values.</param>
         private SudokuSolver(char[] pInitialValues)
         {
             mFoundValues = new List<IFoundValue>();
             mEntities = new List<Entity>();
             mSquares = new List<Square>();
 
+            // Initialize the squares
             for (int i = 0; i < Constants.SUDOKU_SIZE; i++)
             {
                 mSquares.Add(new Square() { Index = i, Filled = false });
             }
 
+            // Initialize the entities
             for (int i = 0; i < Constants.ENTITY_SIZE; i++)
             {
                 mEntities.Add(new Box(mSquares, i));
@@ -32,6 +40,7 @@ namespace SudokuSolver.Core.Solver
                 mEntities.Add(new Col(mSquares, i));
             }
 
+            // Insert the initial values
             for (int i = 0; i < Constants.SUDOKU_SIZE; i++)
             {
                 char value = pInitialValues[i];
@@ -49,26 +58,33 @@ namespace SudokuSolver.Core.Solver
             mInitialCount = mFoundValues.Count();
         }
 
+        /// <summary>
+        /// Static method used to solve a sudoku.
+        /// </summary>
+        /// <param name="pInitialValues">The list of initial values.</param>
+        /// <returns>The result of the solving operation.</returns>
         public static SolveResult Solve(char[] pInitialValues)
         {
             return new SudokuSolver(pInitialValues).Solve();
         }
 
-        private IEnumerable<int> InsertValue(IFoundValue pFoundValue)
+        /// <summary>
+        /// Inserts a value into a square.
+        /// </summary>
+        /// <param name="pFoundValue">The found value to insert</param>
+        /// <returns></returns>
+        private void InsertValue(IFoundValue pFoundValue)
         {
-            if (mFoundValues.Any(v => v.Index == pFoundValue.Index))
-            {
-                return Enumerable.Empty<int>();
-            }
-
             mFoundValues.Add(pFoundValue);
 
             Square square = mSquares[pFoundValue.Index];
             square.InsertValue(pFoundValue.Value);
-
-            return square.Entities.SelectMany(e => e.Squares.Select(s => s.Index));
         }
 
+        /// <summary>
+        /// Check all squares for found values.
+        /// </summary>
+        /// <returns>A list of values that have been found.</returns>
         private IEnumerable<FoundValue> CheckValues()
         {
             List<FoundValue> foundValues = new List<FoundValue>();
@@ -83,20 +99,25 @@ namespace SudokuSolver.Core.Solver
             return foundValues;
         }
 
+        /// <summary>
+        /// The main algorithm for solving a sudoku.
+        /// </summary>
+        /// <returns>The result of the solving operation.</returns>
         private SolveResult Solve()
         {
             try
             {
-                DateTime start = DateTime.Now;
                 while (true)
                 {
                     int foundValuesCount = mFoundValues.Count;
 
+                    // Check if the sudoku has been solved
                     if (foundValuesCount == Constants.SUDOKU_SIZE)
                     {
                         return new SolveResult { FoundValues = mFoundValues, InitialCount = mInitialCount };
                     }
 
+                    // Insert the found value with the lowest ranked methods
                     IEnumerable<FoundValue> foundValues = CheckValues();
                     if (foundValues.Any())
                     {
@@ -104,9 +125,7 @@ namespace SudokuSolver.Core.Solver
                         continue;                    
                     }
                     
-
-                    // Apply advanced techs an check again
-
+                    // Apply advaneed techniques and check for found values again.
 
                     return new SolveResult();
                    
