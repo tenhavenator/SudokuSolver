@@ -1,11 +1,12 @@
-﻿using SudokuSolver.Core.Model;
-using SudokuSolver.Core.Techniques;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace SudokuSolver.Core.Solver
 {
+    using Model;
+    using Techniques;
+
     /// <summary>
     /// Class for solving a sudoku.
     /// </summary>

@@ -1,8 +1,9 @@
-﻿using SudokuSolver.Core.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace SudokuSolver.Core.Solver
 {
+    using Model;
+
     /// <summary>
     /// Class that represents the result of trying to solve a sudoku
     /// </summary>

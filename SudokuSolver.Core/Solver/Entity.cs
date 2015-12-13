@@ -1,10 +1,10 @@
-﻿using SudokuSolver.Core.Model;
-using SudokuSolver.Core.Techniques;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace SudokuSolver.Core.Solver
 {
+    using Model;
+    using Techniques;
     /// <summary>
     /// Class that represents a Box, Row, or Column. Tracks the possible squares for each value (1-9).
     /// </summary>

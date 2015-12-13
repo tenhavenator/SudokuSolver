@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace SudokuSolver.Core.Solver
 {
+    using Model;
+    using Techniques;
+
     /// <summary>
     /// Class that represents a column.
     /// </summary>

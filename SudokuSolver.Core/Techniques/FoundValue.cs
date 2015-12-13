@@ -1,8 +1,9 @@
-﻿using SudokuSolver.Core.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace SudokuSolver.Core.Techniques
 {
+    using Model;
+
     /// <summary>
     /// The concrete implementation of <see cref="IFoundValue"/>
     /// </summary>

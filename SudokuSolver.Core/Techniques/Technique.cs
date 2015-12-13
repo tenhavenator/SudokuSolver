@@ -1,8 +1,9 @@
-﻿using SudokuSolver.Core.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace SudokuSolver.Core.Techniques
 {
+    using Model;
+
     /// <summary>
     /// The concrete implementation of <see cref="ITechnique"/> The basic techniques derived from the rules of sudoku are:
     /// 1). Occupiued - A value cannot go in a square because there is already a value in the square
