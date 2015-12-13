@@ -1,11 +1,12 @@
-﻿using SudokuSolver.Core.Model;
-using SudokuSolver.Core.Solver;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace SudokuSolver.Core.Techniques
 {
+    using Model;
+    using Solver;
+
     /// <summary>
     /// The concrete implementation of <see cref="IMethod"/> There are three types of methods:
     /// 1). Given Value -  A value was part of the initial sudoku.

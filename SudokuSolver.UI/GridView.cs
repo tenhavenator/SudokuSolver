@@ -1,42 +1,48 @@
 ﻿using System;
 using System.Drawing;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-namespace SudokuSolver
+namespace SudokuSolver.UI
 {
-    /// <summary>
-    /// This class contains a custom UI control that represents a sudoku grid
-    /// </summary>
-    public class SudokuGridLayoutPanel : TableLayoutPanel
+    public class GridView : TableLayoutPanel, IGridView
     {
         private const int SUDOKU_SIZE = 81;
         private const int TABLE_SIZE_AREA = 9;
         private const int TABLE_SIZE_SIDE = 3;
         private const int GRID_SIZE_PX = 400;
         private const int BOX_SIZE_PX = 132;
-        private const int TEXTBOX_SIZE_PX = 43;
         private const float ROW_COL_WEIGHT = 33.33333F;
 
-        private TextBox[] mTextBoxes;
+        private CellView[] mCells;
 
-        public TextBox[] TextBoxes
+        public ICellView this[int pIndex]
         { 
             get
             {
-                return mTextBoxes;
+                return mCells[pIndex];
             }
         }
 
-        public void ForEachTextBox(Action<TextBox> pAction)
+        public void ForEachCell(Action<ICellView> pAction)
         {
-            for (int i = 0; i < SUDOKU_SIZE; i++)
+            foreach (var cell in mCells)
             {
-                pAction(mTextBoxes[i]);
+                pAction(cell);
             }
         }
 
-        public SudokuGridLayoutPanel()
+        public bool LoadingControlsEnabled
+        {
+            set 
+            {
+                ForEachCell(c =>
+                {
+                    c.Enabled = !value;
+                });
+            }
+        }
+
+        public GridView()
         {
             this.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
             this.Size = new Size(GRID_SIZE_PX, GRID_SIZE_PX);
@@ -50,7 +56,7 @@ namespace SudokuSolver
             this.RowStyles.Add(new RowStyle(SizeType.Percent, ROW_COL_WEIGHT));
             
             // Configure the boxes
-            mTextBoxes = new TextBox[SUDOKU_SIZE];
+            mCells = new CellView[SUDOKU_SIZE];
             for (int boxIndex = 0; boxIndex < TABLE_SIZE_AREA; boxIndex++)
             {
                 TableLayoutPanel boxPanel = new TableLayoutPanel();
@@ -71,20 +77,7 @@ namespace SudokuSolver
                 // Configure the cells
                 for (int cellIndex = 0; cellIndex < TABLE_SIZE_AREA; cellIndex++)
                 {
-                    TextBox textBox = new TextBox()
-                    { 
-
-                        BorderStyle = BorderStyle.None,
-                        Cursor = Cursors.IBeam,
-                        Font = new Font("Arial", 27.75F),
-                        Margin = new Padding(0),
-                        MaxLength = 1,
-                        Multiline = true,
-                        Size = new Size(TEXTBOX_SIZE_PX, TEXTBOX_SIZE_PX),
-                        TextAlign = HorizontalAlignment.Center,
-                        Anchor =  AnchorStyles.None,
-                        Text = "",
-                    };
+                    CellView cell = new CellView();
 
                     // Check and see if I can calculate this less stupidly
                     int index = (cellIndex / TABLE_SIZE_SIDE) * TABLE_SIZE_AREA
@@ -92,21 +85,11 @@ namespace SudokuSolver
                         + (cellIndex % TABLE_SIZE_SIDE)
                         + (boxIndex % TABLE_SIZE_SIDE) * TABLE_SIZE_SIDE;
 
-                    textBox.TextChanged += (_pSender, _pArgs) => OnTextBoxChanged(textBox, index);
-
-                    mTextBoxes[index] = textBox;
-                    boxPanel.Controls.Add(textBox);
+                    mCells[index] = cell;
+                    boxPanel.Controls.Add(cell);
                 }
 
                 this.Controls.Add(boxPanel);
-            }
-        }
-
-        private void OnTextBoxChanged(TextBox pTextBox, int pIndex)
-        {
-            if (!Regex.IsMatch(pTextBox.Text, "[1-9]|^$"))
-            {
-                pTextBox.Text = "";
             }
         }
     }
